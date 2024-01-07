@@ -1,0 +1,48 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { NewPlan, Restriction } from '../../interfaces';
+import { StateService } from 'src/app/state.service';
+
+
+
+@Component({
+  selector: 'app-restriction-line',
+  templateUrl: './restriction-line.component.html',
+  styleUrls: ['./restriction-line.component.scss']
+})
+export class RestrictionLineComponent implements OnInit {
+  @Input() isIngredient: boolean = false;
+  @Input() restriction: Restriction = {element: 'none', operator: 'none', value: ['none']};
+  @Input() newPlan = {} as NewPlan; 
+
+  operators = ["more than", "less than", "between"];
+  values = ["rice", "pasta", "soja", "seitan"];
+  days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+  subSelections: string[][] = [];
+
+  constructor(
+    private state: StateService) { }
+
+
+  ngOnInit(): void {
+    for (let day of this.newPlan.days) {
+      let subSelection = [];
+      for (let meal of day.meals) {
+        subSelection.push(day.day.substring(0,3).toUpperCase() + " " + meal.name);
+      }
+      this.subSelections.push(subSelection);
+    }
+
+    if (this.isIngredient) {
+      this.state.ingredients.subscribe(ingredients => {
+        this.values = ingredients.map(ing => ing.name);
+      })
+      this.operators = ["more than", "less than", "between", "force", "prohibit", "always combine with", "never combine with"];
+    } else {
+      this.values = ['calories', 'proteins', 'price']
+    }
+  }
+
+  updateNumericInput(value: number, index: number) {
+      this.restriction.value[index] = value.toString();
+  }
+}

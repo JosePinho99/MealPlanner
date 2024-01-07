@@ -1,0 +1,4 @@
+<div class="panel" [ngStyle]="{'width': width + 'px'}">
+  <ng-content></ng-content>
+  <div class="dragger" (mousedown)="mouseDown()" (mouseup)="mouseUp()"></div>
+</div>

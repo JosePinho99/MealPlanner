@@ -1,0 +1,15 @@
+<div class="header">
+  <search-component></search-component>
+  <button-component [title]="'Add ingredient'" (click)="newIngredient()"></button-component>
+</div>
+
+<div class="table">
+  <table-component 
+    [ngStyle]="{'min-width': '660px'}" 
+    [tableColumns]="tableColumns" 
+    [data]="ingredients"
+    (edit)="editIngredient($event)"
+    (delete)="deleteIngredient($event)"
+  >
+</table-component>
+</div>

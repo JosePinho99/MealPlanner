@@ -1,0 +1,27 @@
+@import '../../utils/colors.scss';
+
+.main-button {
+  border: none;
+  color: $blue1;
+  font-weight: bold;
+  background: $blue4;
+  transition: background-color 0.2s;
+}
+
+.main-button:hover {
+  cursor: pointer;
+  background: $blue5;
+}
+
+.secondary-button {
+  border: none;
+  color: $blue6;
+  font-weight: bold;
+  background: $blue1;
+  transition: background-color 0.2s;
+}
+
+.secondary-button:hover {
+  cursor: pointer;
+  color: $blue9;
+}

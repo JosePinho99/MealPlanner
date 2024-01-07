@@ -1,0 +1,24 @@
+@import '../../utils/colors.scss';
+
+.search {
+  position: relative;
+}
+
+.search-input {
+  border: unset;
+  border-bottom: 2px solid $blue5;
+  outline: none;
+  padding: 5px;
+  padding-right: 25px;
+}
+
+.search-input:focus {
+  border-bottom: 2px solid $blue5;
+}
+
+.search-icon {
+  color: $grey3;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}

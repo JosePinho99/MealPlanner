@@ -1,0 +1,74 @@
+@import '../../utils/colors.scss';
+
+.group {
+  padding: 45px;
+}
+
+.group-header {
+  color: $blue8;
+  font-size: $size2;
+  font-weight: bold;
+}
+
+.group-content {
+  padding: 10px 45px;
+  min-width: 640px;
+  overflow: auto;
+}
+
+.block {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.block-label {
+  width: 140px;
+  text-align: end;
+  margin-right: 15px;
+  color: black;
+  font-weight: bold;
+}
+
+.type-radio-group {
+  display: flex;
+}
+
+.type-radio {
+  border: 1px solid $grey4;
+  height: 25px;
+  margin-right: 10px;
+  padding: 0px 10px;
+  cursor: pointer;
+}
+
+.selected-type {
+  background: $secondary2;
+}
+
+.helper {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+  color: $blue5;
+  background: $blue1;
+  padding: 3px 8px;
+  min-width: 640px;
+}
+
+.helper-icon {
+  color: $blue7;
+  margin-right: 5px;
+}
+
+.span-helper {
+  color: $grey7;
+  margin: 0px 5px 0px 30px;
+}
+
+.buttons {
+  margin-left: auto;
+  margin-bottom: 120px;
+  margin-right: 20px;
+}

@@ -1,0 +1,58 @@
+@import '../../utils/colors.scss';
+
+:host {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  border-top: 2px solid $blue5;
+  background: $blue2;
+  border-bottom: 1px solid $blue5;
+}
+
+.table-th {
+  padding: 5px;
+  padding-left: 15px;
+  width: 300px;
+  color: $grey9;
+  font-weight: bold;
+  border-right: 1px solid $grey4;
+}
+
+.first-cell-th {
+  border-left: 1px solid $grey4;
+}
+
+
+.table-body {
+  border-bottom: 1px solid $grey3;
+}
+
+.table-tr {
+  display: flex;
+}
+
+.odd-row {
+  background: $grey2;
+}
+
+
+.table-td {
+  padding: 5px;
+  padding-left: 15px;
+  width: 300px;
+  border-right: 1px solid $grey3;
+}
+
+.first-cell-td {
+  border-left: 1px solid $grey3;
+}
+
+.table-icon {
+  color: $grey8;
+  margin-right: 10px;
+  cursor: pointer;
+}

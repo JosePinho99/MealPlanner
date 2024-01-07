@@ -1,0 +1,53 @@
+<app-panel [width]="300" [minWidth]="110" [maxWidth]="450">
+  <div class="current-plans">
+    <div class="current-plans-header">
+      <p class="current-plans-title">Current plans</p>
+      <button-component class="current-plans-button" [title]="'Add plan'" (click)="newPlan()"></button-component>
+    </div>
+    <p class="no-plans">No plans created yet</p>
+  </div>
+</app-panel>
+
+<div class="content">
+  <div class="tabs">
+    <div *ngFor="let tab of tabs"
+        [ngClass]="{'tab': tab !== selectedTab, 'tab-selected': tab === selectedTab}"
+        (click)="selectTab(tab)"
+    >
+      {{tab}}
+    </div>
+  </div>
+
+  <app-ingredients 
+    *ngIf="selectedTab === tabEnum.INGREDIENTS" 
+    class="main-content" 
+    (newIngredientOutput)="newIngredient()"
+    (editIngredientOutput)="editIngredient($event)"
+  >
+</app-ingredients>
+  
+  <app-new-ingredient 
+    *ngIf="selectedTab === tabEnum.NEW_INGREDIENT" 
+    [edit]="false"
+    class="main-content"
+    (processFinalized)="endedAddingEditingIngredient($event)"
+  >
+  </app-new-ingredient>
+
+  <app-new-ingredient 
+    *ngIf="selectedTab === tabEnum.EDIT_INGREDIENT" 
+    [edit]="true"
+    [ingredient]="ingredientToEdit"
+    class="main-content"
+    (processFinalized)="endedAddingEditingIngredient($event)"
+  >
+  </app-new-ingredient>
+  
+  <app-new-plan 
+    *ngIf="selectedTab === tabEnum.NEW_PLAN" 
+    class="main-content" 
+    (contentFullSize)="contentFullSize = $event" 
+    [ngStyle]="{'width': contentFullSize ? 'calc(100% - 50px)': 'calc(100% - 250px)'}" 
+  >
+  </app-new-plan>
+</div>
