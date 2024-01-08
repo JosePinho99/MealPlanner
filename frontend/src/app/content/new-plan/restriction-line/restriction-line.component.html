@@ -41,7 +41,7 @@
     <span *ngIf="isIngredient" [ngStyle]="{'margin-left': '5px'}">times a day</span>
   </ng-container>
 
-  <ng-container *ngIf="restriction.operator === 'force' || restriction.operator === 'prohibit'">
+  <ng-container *ngIf="restriction.operator === 'prioritize' || restriction.operator === 'avoid'">
     <select-component 
       class="field" 
       [selectedValues]="restriction.value" 
@@ -55,18 +55,17 @@
     </select-component>
   </ng-container>
 
-  <ng-container *ngIf="restriction.operator === 'always combine with' || restriction.operator === 'never combine with'">
+  <ng-container *ngIf="restriction.operator === 'combine with' || restriction.operator === 'don\'t combine with'">
     <select-component 
       class="field" 
-      [selectedValues]="restriction.value" 
+      [selectedValue]="restriction.value[0]" 
       [values]="values"
       [width]="140"
-      [multipleSelect]="true"
-      (select)="restriction.value = $event"
+      (select)="restriction.value[0] = $event"
     >
     </select-component>
   </ng-container>
-  
+
   <ng-container *ngIf="restriction.operator === 'between (weekly)' || restriction.operator === 'between (daily)' || restriction.operator === 'between'">
     <input-component [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
     <span [ngStyle]="{'margin': '0px 5px'}">and</span>

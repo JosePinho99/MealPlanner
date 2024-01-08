@@ -15,19 +15,8 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.http.get('http://127.0.0.1:8000/getIngredients/').subscribe((ingredients: any[]) => {
-      let tempIngredients: Ingredient[] = [];
-      for (let ing of ingredients) {
-        tempIngredients.push(
-          {
-            name: ing.name, calories: ing.calories, proteins: ing.proteins, price: ing.price,
-            measure: ing.measure, referenceValue: ing.referenceValue, type: ing.type, allowedMeals: ing.allowedMeals,
-            quantityMaximum: ing.quantityMaximum, quantityMinimum: ing.quantityMinimum
-        }
-        )
-      }
-      this.state.setIngredients(tempIngredients);
-
+    this.http.get('http://127.0.0.1:8000/getIngredients/').subscribe((ingredients: Ingredient[]) => {
+      this.state.setIngredients(ingredients);
     });
   }
 }

@@ -24,10 +24,10 @@ export class RestrictionLineComponent implements OnInit {
 
 
   ngOnInit(): void {
-    for (let day of this.newPlan.days) {
+    for (let day of this.days) {
       let subSelection = [];
-      for (let meal of day.meals) {
-        subSelection.push(day.day.substring(0,3).toUpperCase() + " " + meal.name);
+      for (let meal of this.newPlan.meals) {
+        subSelection.push(day.substring(0,3).toUpperCase() + " " + meal.name);
       }
       this.subSelections.push(subSelection);
     }
@@ -36,7 +36,7 @@ export class RestrictionLineComponent implements OnInit {
       this.state.ingredients.subscribe(ingredients => {
         this.values = ingredients.map(ing => ing.name);
       })
-      this.operators = ["more than", "less than", "between", "force", "prohibit", "always combine with", "never combine with"];
+      this.operators = ["more than", "less than", "between", "prioritize", "avoid", "combine with", "don't combine with"];
     } else {
       this.values = ['calories', 'proteins', 'price']
     }

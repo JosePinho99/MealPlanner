@@ -1,10 +1,22 @@
 <div class="sub-tabs">
   <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.GLOBAL}" (click)="changeSubTab(subTabs.GLOBAL)">General settings</div>
-  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.DAILY}" (click)="changeSubTab(subTabs.DAILY)">Daily settings</div>
+  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.DAILY}" (click)="changeSubTab(subTabs.DAILY)">Meals</div>
 </div>
 
 
 <div *ngIf="selectedSubTab === subTabs.GLOBAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+  <div class="restriction-block" style="margin-top: 10px; margin-bottom: 20px;">
+    <p class="restriction-block-header">Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
+    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">
+      <i class="fa-solid fa-eraser delete-icon" (click)="deleteDailyRestriction(i)"></i>
+      <app-restriction-line 
+        [newPlan]="newPlan"
+        [restriction]="restriction"
+        class="restriction-line">
+      </app-restriction-line>
+    </div>
+  </div>
+  
   <div class="restriction-block" [ngStyle]="{'margin-top': '10px'}">
     <p class="restriction-block-header">Ingredient restrictions <i class="fa-solid fa-plus pointer" (click)="addIngredientRestriction()"></i></p>
     <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of newPlan.ingredientRestrictions; let i = index">
@@ -21,27 +33,8 @@
 
 
 <div *ngIf="selectedSubTab === subTabs.DAILY" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
-  <span class="helper"><i class="fa-solid fa-circle-info helper-icon"></i>By default, this settings are equally applied to every day of the week, to make specific changes to a single day, click <span class="helper-clickable" (click)="openDailyChange()">here</span> and select the day you want to change, after doing that you you can't apply changes to all days at once anymore</span>
-  
-  <!-- DAILY RESTRICTIONS -->
-  <div class="restriction-block">
-    <p class="restriction-block-header"><span *ngIf="confirmedDay !== 'All'">{{confirmedDay + ' '}}</span>Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
-    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">
-      <i class="fa-solid fa-eraser delete-icon" (click)="deleteDailyRestriction(i)"></i>
-      <app-restriction-line 
-        [newPlan]="newPlan"
-        [restriction]="restriction"
-        class="restriction-line">
-      </app-restriction-line>
-    </div>
-
-  </div>
-
-
   <!-- MEALS -->
-  <div class="restriction-block">
-    <p class="restriction-block-header"><span *ngIf="confirmedDay !== 'All'">{{confirmedDay + ' '}}</span>Meals</p>
-
+  <div class="restriction-block" style="margin-top: 0;">
     <div class="meals">
       <div class="meals-tabs">
         <div *ngFor="let meal of dailyMeals; let i = index" class="meal-tab" [ngClass]="{'meal-tab-selected': selectedMeal === meal}" (click)="selectedMeal = meal">
@@ -79,19 +72,6 @@
   </div>
 </div>
 
-
-<!-- DAYS -->
-<div *ngIf="displayDays" class="days-container">
-  <div class="days-header">Days being applied</div>
-
-  <div class="days">
-    <div class="day" *ngFor="let day of days">
-      <div class="day-label">{{day}}</div><input class="pointer" (change)="selectDay(day)" [checked]="selectedDay === day" type="radio" [disabled]="disableAllDays && day === 'All'">
-    </div>
-  </div>
-
-  <button-component class="days-button" [title]="'Confirm'" (click)="confirmDay()"></button-component>
-</div>
 
 <div class="buttons">
   <button-component [size]="'big'" [type]="'secondary'" [title]="'Cancel'"></button-component>

@@ -1,16 +1,6 @@
 import random
 
-def addIngredient(meal, ingredient, ingredientsMinMax):
-    quantitySelected = random.randint(float(ingredient['quantityMinimum']), float(ingredient['quantityMaximum']))
-    
-    meal.append({
-        'name': ingredient['name'],
-        'price': round((float(ingredient['price']) * quantitySelected) / float(ingredient['referenceValue']), 2),
-        'calories': round((float(ingredient['calories']) * quantitySelected) / float(ingredient['referenceValue']), 2),
-        'proteins': round((float(ingredient['proteins']) * quantitySelected) / float(ingredient['referenceValue']), 2),
-        'quantity':  str(quantitySelected)
-    })
-    ingredientsMinMax[ingredient['type']] -= 1
+
 
 
 def transformIngredient(meal, ingredient, ingredientsMinMax, allowedIngredients, planData):
@@ -198,74 +188,215 @@ def buildPlan(weekPlan, iteration, ingredientsLimits, planData, ingredients, fai
         return []
 
 
+
+
+
+
+
+
+
+
+
 def getPlan(planData, ingredients):
-    failedRestrictions = []
-
-    for iteration in range(100):
-      ingredientsLimits = []
-      for ingredient in ingredients:
-          minimum = 0
-          current = 0
-          maximum = 30
-          for restriction in planData['ingredientRestrictions']:
-              if restriction['element'] == ingredient['name']:
-                  if restriction['operator'] == 'more than (weekly)':
-                      minimum = float(restriction['value'][0]) - 1
-                  if restriction['operator'] == 'less than (weekly)':
-                      maximum = float(restriction['value'][0]) - 1
-                  if restriction['operator'] == 'between (weekly)':
-                      minimum = float(restriction['value'][0]) - 1
-                      minimum = float(restriction['value'][1]) - 1
-
-          ingredientsLimits.append({'name': ingredient['name'], 'min': minimum, 'current': current, 'max': maximum})
-
-      result = buildPlan([[], [], [], [], [], [], []], 1, ingredientsLimits, planData, ingredients, failedRestrictions)
-
-      if len(result) > 0:
-        totalCalories = 0
-        totalProteins = 0
-        totalPrice = 0
-        days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-        for i, day in enumerate(result):
-            print(days[i])
-            print('--------------------')
-            calories = 0
-            proteins = 0
-            price = 0
-            for meal in day:
-                for ingredient in meal:
-                    print(ingredient)
-                    calories += ingredient['calories']
-                    proteins += ingredient['proteins']
-                    price += ingredient['price']
-                print()
-            print(calories, proteins, price)
-            totalCalories += calories
-            totalProteins += proteins
-            totalPrice += price
-
-            print()
-            print()
-        print('END STATS')
-        print(totalCalories / 7, totalProteins / 7, (totalPrice * 31 * 4) / 28)
-        print()
+  basePlan = getStartingPlan(planData, ingredients)
+  dailyLimits,ingWeeklyLimits,ingDailyLimits,ingPriorities,ingAvoidances,ingCombines,ingDontCombines = getValidationDicts(planData["dailyRestrictions"], planData["ingredientRestrictions"])
+  
+  validatePlan(basePlan, dailyLimits, ingWeeklyLimits, ingDailyLimits, ingPriorities, ingAvoidances, ingCombines, ingDontCombines)
+ 
 
 
-        break
+#Return a random plan that will act as the initial plan
+def getStartingPlan(planData, ingredients):
+  mealsInfo = planData["meals"]
+  plan = [[], [], [], [], [], [], []]
+  for day in plan:     
+    for mealInfo in mealsInfo:
+      meal = fillMeal(mealInfo, ingredients)  
+      day.append(meal)
+  return plan
+
+    
+
+def fillMeal(mealInfo, ingredients):
+  meal = [mealInfo["name"]]
+  remainingMainIngs = mealInfo["mIMin"]
+  remainingSecondaryIngs = mealInfo["sIMin"]
+  remainingExtraIngs = mealInfo["eIMin"]
+  mealType = mealInfo["type"]
+  random.shuffle(ingredients)
+
+  for ingredient in ingredients:
+    if mealType in ingredient["allowedMeals"]:
+      if (ingredient["type"] == "Main" and remainingMainIngs > 0):
+        addIngredient(meal, ingredient)
+        remainingMainIngs -= 1
+      if (ingredient["type"] == "Secondary" and remainingSecondaryIngs > 0):
+        addIngredient(meal, ingredient)
+        remainingSecondaryIngs -= 1
+      if (ingredient["type"] == "Extra" and remainingExtraIngs > 0):
+        addIngredient(meal, ingredient)
+        remainingExtraIngs -= 1
+    if (remainingMainIngs == 0 and remainingSecondaryIngs == 0 and remainingExtraIngs == 0):
+      return meal 
+        
+  print("ERROR", mealInfo["name"], remainingMainIngs, remainingSecondaryIngs, remainingExtraIngs)
+  #ERROR, NOT ENOUGH INGREDIENTS TO FULLFILL MINIMUM MEAL QUANTITIES REQUIREMENTS
+            
+
+#Adds an ingredient, takes into consideration the interval for min and max quantities
+def addIngredient(meal, ingredient):
+  quantitySelected = random.randint(float(ingredient['quantityMinimum']), float(ingredient['quantityMaximum']))   
+  meal.append({
+    "name": ingredient["name"],
+    "price": round((float(ingredient["price"]) * quantitySelected) / float(ingredient["referenceValue"]), 2),
+    "calories": round((float(ingredient["calories"]) * quantitySelected) / float(ingredient["referenceValue"]), 2),
+    "proteins": round((float(ingredient["proteins"]) * quantitySelected) / float(ingredient["referenceValue"]), 2),
+    "quantity": str(quantitySelected),
+    "measure": ingredient["measure"]
+  })
 
 
-    errors = {}
-    for fail in failedRestrictions:
-        if fail in errors:
-            errors[fail] += 1
-        else:
-            errors[fail] = 1
+#Here we prepare the data structures necessary to validate one meal plan in a more direct way
+#Having these will make it that for each validation, only one iteration of the plan will be needed
+def getValidationDicts(dailyRestrictions, ingredientRestrictions):
+  dailyLimits = {}
+  ingWeeklyLimits = {}
+  ingDailyLimits = {}
+  ingPriorities = {}
+  ingAvoidances = {}
+  ingCombines = []
+  ingDontCombines = []
 
-    mostCommon = 0
-    standard = 0
-    for k,v in errors.items():
-        if v > standard:
-            standard = v
-            mostCommon = k
+  for restriction in dailyRestrictions:
+    addCountLimitsToDict(restriction, dailyLimits, "more than", "less than", "between")
 
-    print(standard, mostCommon)
+  for restriction in ingredientRestrictions:
+    addCountLimitsToDict(restriction, ingWeeklyLimits, "more than (weekly)", "less than (weekly)", "between (weekly)")
+    addCountLimitsToDict(restriction, ingDailyLimits, "more than (daily)", "less than (daily)", "between (daily)")
+    if restriction["operator"] == "prioritize":
+      [dictionaryCreateOrUpdateList(ingPriorities, value, restriction["element"]) for value in restriction["value"]]
+    if restriction["operator"] == "avoid":
+      [dictionaryCreateOrUpdateList(ingAvoidances, value, restriction["element"]) for value in restriction["value"]]
+
+    if restriction["operator"] == "combine with":
+      ingCombines.append([restriction["element"], restriction["value"][0]])
+    if restriction["operator"] == "don't combine with":
+      ingDontCombines.append([restriction["element"], restriction["value"][0]])
+
+  return dailyLimits,ingWeeklyLimits,ingDailyLimits,ingPriorities,ingAvoidances,ingCombines,ingDontCombines
+
+
+
+def addCountLimitsToDict(restriction, dict, operatorMoreThan, operatorLessThan, operatorBetween):
+  dict[restriction["element"]] = [0, 9999999]
+  if restriction["operator"] == operatorMoreThan:
+    dict[restriction["element"]][0] = int(restriction["value"][0])
+  if restriction["operator"] == operatorLessThan:
+    dict[restriction["element"]][1] = int(restriction["value"][0])
+  if restriction["operator"] == operatorBetween:
+    dict[restriction["element"]][0] = int(restriction["value"][0])
+    dict[restriction["element"]][1] = int(restriction["value"][1])
+    
+
+
+#Validate the plan, gives it a score, where 0 fits all criteria and n is number of criteria missed
+#Done so that if a plan can't fullfill all criteria, it still is able to return suggestions close to the requested
+def validatePlan(plan, dailyLimits, ingWeeklyLimits, ingDailyLimits, ingPriorities, ingAvoidances, ingCombines, ingDontCombines): 
+  weekDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+  errors = [] 
+  ingredientsUsedWeekly = {}  
+  for index, day in enumerate(plan):
+    dailyCals = 0
+    dailyPrice = 0
+    ingredientsUsedDaily = {}
+
+    for meal in day:
+      mealName = meal[0]
+      dayMeal = weekDays[index] + " " + mealName
+      ingredientsUsedInMeal = []
+      for ingredient in meal[1:]:
+        ingredientsUsedInMeal.append(ingredient["name"])
+        dailyCals += ingredient["calories"]
+        dailyPrice += ingredient["price"]
+        dictionaryCreateOrUpdateSum(ingredientsUsedDaily, ingredient["name"])
+        dictionaryCreateOrUpdateSum(ingredientsUsedWeekly, ingredient["name"])
+
+      validateMeal(errors, dayMeal, ingCombines, ingDontCombines, ingPriorities, ingAvoidances, ingredientsUsedInMeal)
+    
+    validateDay(errors, ingDailyLimits, dailyLimits, ingredientsUsedDaily, dailyPrice, dailyCals)
+
+  validateWeek(errors, ingWeeklyLimits, ingredientsUsedWeekly)
+
+  for error in errors:
+    print(error)
+
+  
+            
+
+
+#Validate restriction specific to meals, like combinations or priorities
+def validateMeal(errors, dayMeal, ingCombines, ingDontCombines, ingPriorities, ingAvoidances, ingredientsUsedInMeal):
+  for combination in ingCombines:
+    if (combination[0] in ingredientsUsedInMeal and not combination[1] in ingredientsUsedInMeal) or (combination[1] in ingredientsUsedInMeal and not combination[0] in ingredientsUsedInMeal):
+      errors.append("MISSING_COMBINATION-" + dayMeal + combination[0] + combination[1]) 
+
+  for combination in ingDontCombines:
+    if combination[0] in ingredientsUsedInMeal and combination[1] in ingredientsUsedInMeal:
+      errors.append("BAD_COMBINATION-" + dayMeal) 
+
+  if (dayMeal in ingPriorities.keys()):
+    for prioritizedIngredient in ingPriorities[dayMeal]:
+      if not prioritizedIngredient in ingredientsUsedInMeal:
+        errors.append("MISSING_PRIORITIZED-" + dayMeal)   
+
+  if (dayMeal in ingAvoidances.keys()):
+    for avoidingIngredient in ingAvoidances[dayMeal]:
+      if avoidingIngredient in ingredientsUsedInMeal:
+        errors.append("AVOIDED_EXISTS-" + dayMeal)   
+
+
+#Validate restriction specific to a day, like daily quantities
+def validateDay(errors, ingDailyLimits, dailyLimits, ingredientsUsedDaily, dailyPrice, dailyCals):
+  for k,v in ingDailyLimits.items():
+    if k in ingredientsUsedDaily.keys():
+      if (ingredientsUsedDaily[k] < ingDailyLimits[k][0]):
+        errors.append("LOW-" + k)     
+      if (ingredientsUsedDaily[k] > ingDailyLimits[k][1]):
+        errors.append("HIGH-" + k)    
+
+  if (dailyPrice < dailyLimits["price"][0]):
+    errors.append("LOW-price")     
+  if (dailyPrice > dailyLimits["price"][1]):
+    errors.append("HIGH-price")  
+  if (dailyCals < dailyLimits["calories"][0]):
+    errors.append("LOW-calories")     
+  if (dailyCals > dailyLimits["calories"][1]):
+    errors.append("HIGH-calories")    
+
+
+#Validate restriction specific to the whole week, like weekly quantities
+def validateWeek(errors, ingWeeklyLimits, ingredientsUsedWeekly):
+  for k in ingWeeklyLimits.keys():
+    if k in ingredientsUsedWeekly.keys():
+      if (ingredientsUsedWeekly[k] < ingWeeklyLimits[k][0]):
+        errors.append("LOW-" + k)     
+      if (ingredientsUsedWeekly[k] > ingWeeklyLimits[k][1]):
+        errors.append("HIGH-" + k)       
+
+
+
+def dictionaryCreateOrUpdateSum(dict, value):
+  if value in dict.keys():
+    dict[value] += 1
+  else:
+    dict[value] = 1    
+
+
+def dictionaryCreateOrUpdateList(dict, key, value):
+  if key in dict.keys():
+    dict[key].append(value)
+  else:
+    dict[key] = [value]
+
+        
+    

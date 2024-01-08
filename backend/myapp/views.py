@@ -6,6 +6,7 @@ from . import planBuilder
 
 
 def newPlan(request):
+    print('nice')
     data = json.loads(request.body.decode('utf-8'))
     ingredients = MealPlanner.objects.filter(username="Kaxinauas").values_list("ingredients", flat=True)
     planBuilder.getPlan(data, ingredients[0])

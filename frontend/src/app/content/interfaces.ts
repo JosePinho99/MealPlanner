@@ -12,8 +12,9 @@ export interface Ingredient {
 }
 
 export interface NewPlan {
-  ingredientRestrictions:Restriction[],
-  days: Day[]
+  ingredientRestrictions: Restriction[],
+  dailyRestrictions: Restriction[],
+  meals: Meal[],
 }
 
 
@@ -23,11 +24,6 @@ export interface Restriction {
   value: string[]
 }
 
-export interface Day {
-  day: string,
-  dailyRestrictions: Restriction[],
-  meals: Meal[]
-}
 
 export interface Meal {
   name: string

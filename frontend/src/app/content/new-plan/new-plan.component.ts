@@ -16,19 +16,11 @@ enum SubTab {
 })
 export class NewPlanComponent implements OnInit {
   subTabs = SubTab;
-  displayDays = false;
   selectedSubTab = SubTab.GLOBAL;
-
   operators = ['between', 'more than', 'less than', 'mix with', 'do not mix with', 'prohibit', 'force', 'allow consecutive'];
   selectedMeal: Meal;
   ingredientTypes = ['Main ingredients', 'Secondary ingredients', 'Extra ingredients']
-
   newPlan = {} as NewPlan;
-  selectedDay = 'All';
-  confirmedDay = 'All';
-  days = ['All', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  disableAllDays = false;
-
   dailyRestrictions: Restriction[] = [];
   dailyMeals: Meal[] = [];
 
@@ -48,14 +40,9 @@ export class NewPlanComponent implements OnInit {
 
   changeSubTab(subTab: SubTab) {
     this.selectedSubTab = subTab;
-    this.displayDays = false;
     this.contentFullSize.emit(true);
   }
 
-  openDailyChange() {
-    this.displayDays = true;
-    this.contentFullSize.emit(false);
-  }
 
   addIngredientRestriction() {
     this.newPlan.ingredientRestrictions.push(
@@ -67,37 +54,10 @@ export class NewPlanComponent implements OnInit {
     this.newPlan.ingredientRestrictions.splice(index, 1);
   }
 
-  selectDay(day: string) {
-    this.selectedDay = day;
-  }
-
-  confirmDay() {
-    if (this.selectedDay !== 'All' && !this.disableAllDays) {
-      this.disableAllDays = true;
-      for (let day of this.days) {
-        if (day !== 'All') {
-          let clonedRestrictions = JSON.parse(JSON.stringify(this.newPlan.days.find(d => d.day === 'Monday').dailyRestrictions));
-          let clonedMeals = JSON.parse(JSON.stringify(this.newPlan.days.find(d => d.day === 'Monday').meals));
-          this.newPlan.days.find(d => d.day === day).dailyRestrictions = clonedRestrictions;
-          this.newPlan.days.find(d => d.day === day).meals = clonedMeals;
-        }
-      }
-    }
-    this.confirmedDay = this.selectedDay;
-    this.displayDays = false;
-    this.getDailyRestrictionsAndMeals();
-    this.contentFullSize.emit(true);
-  }
 
   getDailyRestrictionsAndMeals() {
-    let dayToSearch = this.confirmedDay;
-
-    //Since every day is equal in this scenary, we pick the first one because it doesn't matter which one to pick
-    if (this.confirmedDay === 'All') {
-      dayToSearch = 'Monday'
-    }
-    this.dailyRestrictions = this.newPlan.days.find(day => day.day === dayToSearch).dailyRestrictions;
-    this.dailyMeals = this.newPlan.days.find(day => day.day === dayToSearch).meals;
+    this.dailyRestrictions = this.newPlan.dailyRestrictions;
+    this.dailyMeals = this.newPlan.meals;
     this.selectedMeal = this.dailyMeals[0];
   }
 
