@@ -1,0 +1,77 @@
+<select-component 
+  class="field" 
+  [selectedValue]="restriction.element" 
+  [values]="values" 
+  [width]="140"
+  (select)="changeElement($event)"
+  >
+</select-component>
+
+<select-component 
+  *ngIf="!isIngredient"
+  class="field"
+  [selectedValue]="restriction.operator" 
+  [values]="operators" 
+  [width]="160"
+  (select)="restriction.operator = $event; restriction.value = []"
+  >
+</select-component>
+
+<select-component 
+  *ngIf="isIngredient"
+  class="field"
+  [selectedValue]="restriction.operator" 
+  [subSelects]="['more than', 'less than', 'between']"
+  [subSelectsValues]="[['more than (daily)', 'more than (weekly)'], ['less than (daily)', 'less than (weekly)'], ['between (daily)', 'between (weekly)']]"
+  [values]="operators" 
+  [width]="160"
+  (select)="changeOperator($event)"
+  >
+</select-component>
+
+<!--  Value boxes --> 
+<ng-container>
+  <ng-container *ngIf="restriction.operator === 'more than (weekly)' || restriction.operator === 'less than (weekly)' || restriction.operator === 'more than'|| restriction.operator === 'less than'">
+    <input-component [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <span *ngIf="isIngredient" [ngStyle]="{'margin-left': '5px'}">times a week</span>
+  </ng-container>
+
+  <ng-container *ngIf="restriction.operator === 'more than (daily)' || restriction.operator === 'less than (daily)'">
+    <input-component [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <span *ngIf="isIngredient" [ngStyle]="{'margin-left': '5px'}">times a day</span>
+  </ng-container>
+
+  <ng-container *ngIf="restriction.operator === 'prioritize' || restriction.operator === 'avoid'">
+    <select-component 
+      class="field" 
+      [selectedValues]="restriction.value" 
+      [values]="days"
+      [width]="140"
+      [subSelects]="days"
+      [subSelectsValues]="subSelections"
+      [multipleSelect]="true"
+      (select)="restriction.value = $event"
+    >
+    </select-component>
+  </ng-container>
+
+  <ng-container *ngIf="restriction.operator === 'combine with' || restriction.operator === 'don\'t combine with'">
+    <select-component 
+      class="field" 
+      [selectedValue]="restriction.value[0]" 
+      [values]="values"
+      [width]="140"
+      (select)="restriction.value[0] = $event"
+    >
+    </select-component>
+  </ng-container>
+
+  <ng-container *ngIf="restriction.operator === 'between (weekly)' || restriction.operator === 'between (daily)' || restriction.operator === 'between'">
+    <input-component [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <span [ngStyle]="{'margin': '0px 5px'}">and</span>
+    <input-component [width]="60" [model]="restriction.value[1]" (changes)="updateNumericInput($event, 1)"></input-component>
+    <span *ngIf="isIngredient && restriction.operator === 'between (weekly)'" [ngStyle]="{'margin-left': '5px'}">times a week</span>
+    <span *ngIf="isIngredient && restriction.operator === 'between (daily)'" [ngStyle]="{'margin-left': '5px'}">times a day</span>
+  </ng-container>
+</ng-container>
+

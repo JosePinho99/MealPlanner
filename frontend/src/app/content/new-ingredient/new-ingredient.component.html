@@ -1,0 +1,84 @@
+<div [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 130px)'}">
+  <div class="helper"><i class="fa-solid fa-circle-info helper-icon"></i>Use the reference value as the measurement taken to get the price, calories and proteins of the ingredient. For example, you can use 100g as the reference for an ingredient, but wanting to allow meals to have values from 50g to 150g.</div>
+
+  <div class="group">
+    <p class="group-header">{{edit ? 'Edit ingredient' : 'New ingredient'}}</p>
+
+    <div class="group-content">
+      <div class="block">
+        <p class="block-label">Name</p>
+        <input-component [type]="'text'" [model]="ingredient.name" (changes)="ingredient.name = $event"></input-component> 
+      </div>
+
+      <div class="block">
+        <p class="block-label">Reference value</p>
+        <div class="type-radio-group">
+          <input-component [model]="ingredient.referenceValue" (changes)="ingredient.referenceValue = $event"></input-component>
+          <span [ngStyle]="{'margin-left': '5px', 'margin-right': '50px'}" class="span-helper">{{'units'}}</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="block-label">Quantites allowed</p>
+        <div>
+          <div>
+            <span class="span-helper" [ngStyle]="{'margin-left': '0px', 'margin-right': '7px'}">Minimum</span>
+            <input-component [model]="ingredient.quantityMinimum" (changes)="ingredient.quantityMinimum = $event"></input-component>
+            <span [ngStyle]="{'margin-left': '5px', 'margin-right': '50px'}" class="span-helper">{{'units'}}</span>
+          </div>
+          <div [ngStyle]="{'margin-top': '5px'}">
+            <span class="span-helper" [ngStyle]="{'margin-left': '0px'}">Maximum</span>
+            <input-component [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
+            <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'units'}}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="block-label">Type</p>
+        <div class="type-radio-group">
+          <div class="type-radio" [ngClass]="{'selected-type': ingredient.type === 'Main'}" (click)="ingredient.type = IngredientType.MAIN">Main Ingredient</div>
+          <div class="type-radio" [ngClass]="{'selected-type': ingredient.type === 'Secondary'}" (click)="ingredient.type = IngredientType.SECONDARY">Secondary Ingredient</div>
+          <div class="type-radio" [ngClass]="{'selected-type': ingredient.type === 'Extra'}" (click)="ingredient.type = IngredientType.EXTRA">Extra Ingredient</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <p class="block-label">Allowed meals</p>
+        <div class="type-radio-group">
+          <select-component 
+            [width]="140"
+            [selectedValues]="ingredient.allowedMeals"
+            (select)="ingredient.allowedMeals = $event"
+            [multipleSelect]="true"
+            [values]="['Main meal', 'Secondary meal', 'Snack meal']"
+          ></select-component>
+        </div>
+      </div>
+    
+      <div class="block">
+        <p class="block-label">Price</p>
+        <input-component [model]="ingredient.price" (changes)="ingredient.price = $event"></input-component> 
+        <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
+      </div>
+
+      <div class="block">
+        <p class="block-label">Calories</p>
+        <input-component [model]="ingredient.calories" (changes)="ingredient.calories = $event"></input-component> 
+        <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
+      </div>
+    
+      <div class="block">
+        <p class="block-label">Proteins</p>
+        <input-component [model]="ingredient.proteins" (changes)="ingredient.proteins = $event"></input-component> 
+        <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="buttons">
+  <button-component [size]="'big'" [type]="'secondary'" [title]="'Cancel'"></button-component>
+  <button-component (click)="save()" [size]="'big'" [title]="'Save'" [ngStyle]="{'margin-left': '5px'}"></button-component>
+</div>

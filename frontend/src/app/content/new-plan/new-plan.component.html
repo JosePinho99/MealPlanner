@@ -1,0 +1,79 @@
+<div class="sub-tabs">
+  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.GLOBAL}" (click)="changeSubTab(subTabs.GLOBAL)">General settings</div>
+  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.DAILY}" (click)="changeSubTab(subTabs.DAILY)">Meals</div>
+</div>
+
+
+<div *ngIf="selectedSubTab === subTabs.GLOBAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+  <div class="restriction-block" style="margin-top: 10px; margin-bottom: 20px;">
+    <p class="restriction-block-header">Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
+    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">
+      <i class="fa-solid fa-eraser delete-icon" (click)="deleteDailyRestriction(i)"></i>
+      <app-restriction-line 
+        [newPlan]="newPlan"
+        [restriction]="restriction"
+        class="restriction-line">
+      </app-restriction-line>
+    </div>
+  </div>
+  
+  <div class="restriction-block" [ngStyle]="{'margin-top': '10px'}">
+    <p class="restriction-block-header">Ingredient restrictions <i class="fa-solid fa-plus pointer" (click)="addIngredientRestriction()"></i></p>
+    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of newPlan.ingredientRestrictions; let i = index">
+      <i class="fa-solid fa-eraser delete-icon" (click)="deleteIngredientRestriction(i)"></i>
+      <app-restriction-line [isIngredient]="true"
+        [newPlan]="newPlan"
+        [restriction]="restriction"
+        class="restriction-line">
+      </app-restriction-line>
+    </div>
+  </div>
+
+</div>
+
+
+<div *ngIf="selectedSubTab === subTabs.DAILY" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+  <!-- MEALS -->
+  <div class="restriction-block" style="margin-top: 0;">
+    <div class="meals">
+      <div class="meals-tabs">
+        <div *ngFor="let meal of dailyMeals; let i = index" class="meal-tab" [ngClass]="{'meal-tab-selected': selectedMeal === meal}" (click)="selectedMeal = meal">
+          {{meal.name}}<i class="fa-solid fa-plus pointer meal-icon" [ngStyle]="{'margin-left': 'auto'}" (click)="addMeal(i); $event.stopPropagation()"></i>
+          <i class="fa-solid fa-trash table-icon pointer meal-icon" [ngStyle]="{'margin-left': '7px'}" (click)="deleteMeal(i); $event.stopPropagation()"></i>
+        </div>
+      </div>
+
+      <div class="meal-content">
+        <div class="meal-content-group" [ngStyle]="{'margin-right': '50px'}">
+          <div class="meal-content-header">Ingredient distribution</div>
+
+          <div class="ingredient-type-restriction" *ngFor="let ingredientType of ingredientTypes">
+            <div class="ingredient-type-label">{{ingredientType}}</div> 
+            <div>
+              Minimum 
+              <input-component [model]="ingredientTypeRestriction(ingredientType, 'Min')" (changes)="changeIngredientTypeRestriction($event, ingredientType, 'Min')" [width]="40" [height]="20" [paddingLeft]="2" [ngStyle]="{'margin-right': '10px'}"></input-component> 
+              Maximum 
+              <input-component [model]="ingredientTypeRestriction(ingredientType, 'Max')" (changes)="changeIngredientTypeRestriction($event, ingredientType, 'Max')" [width]="40" [height]="20" [paddingLeft]="2"></input-component>
+            </div>
+          </div>
+        </div>
+
+        <div class="meal-content-group" [ngStyle]="{'margin-right': '50px'}">
+          <div class="meal-content-header">Meal type</div>
+          <div class="meal-type"><select-component [width]="200" [selectedValue]="selectedMeal.type" [values]="['Main meal', 'Secondary meal', 'Snack meal']" (select)="selectedMeal.type = $event"></select-component> </div>
+        </div>
+
+        <div class="meal-content-group">
+          <div class="meal-content-header">Meal name</div>
+          <div class="meal-type"><input-component [model]="selectedMeal.name" (changes)="selectedMeal.name = $event" [type]="'text'"></input-component> </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="buttons">
+  <button-component [size]="'big'" [type]="'secondary'" [title]="'Cancel'"></button-component>
+  <button-component (click)="save()" [size]="'big'" [title]="'Save'" [ngStyle]="{'margin-left': '5px'}"></button-component>
+</div>

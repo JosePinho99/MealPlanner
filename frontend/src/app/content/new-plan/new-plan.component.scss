@@ -1,0 +1,207 @@
+@import '../../utils/colors.scss';
+
+.sub-tabs {
+  margin: 20px;
+  display: flex;
+}
+
+.sub-tab {
+  font-weight: bold;
+  color: $tertiary10;
+  padding: 5px;
+}
+
+.selected-sub-tab {
+  background: $tertiary1;
+}
+
+.sub-tab:hover {
+  color: $tertiary9;
+  cursor: pointer;
+}
+
+.selected-sub-tab:hover {
+  color: $tertiary10;
+  cursor: unset;
+}
+
+.helper {
+  display: inline-block;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 5px;
+  color: $blue5;
+  background: $blue1;
+  padding: 3px 8px;
+}
+
+.helper-icon {
+  color: $blue7;
+  margin-right: 5px;
+}
+
+.restriction-block {
+  margin-top: 40px;
+  margin-left: 20px;
+}
+
+.restriction-block-header {
+  color: $blue8;
+  font-size: $size2;
+  margin-bottom: 20px;
+}
+
+.restriction-line {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.helper-clickable {
+  color: $blue6;
+  text-decoration: underline;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.meals {
+  display: flex;
+}
+
+.meals-tabs {
+  display: flex;
+  flex-direction: column;
+  width: 190px;
+}
+
+.meal-tab {
+  display: flex;
+  border: 1px solid $grey3;
+  padding: 10px 20px;
+  background: $grey1;
+  color: $grey10;
+  border-right: none;
+  cursor: pointer;
+  align-items: baseline;
+}
+
+.meal-icon {
+  display: none;
+  color: $blue5;
+}
+
+.meal-tab:hover .meal-icon {
+  display: block;
+}
+
+
+.meal-tab-selected {
+  color: $blue5;
+  font-weight: bold;
+  border-right: 0px;
+  width: 150px;
+  z-index: 1;
+  background: white;
+  cursor: unset;
+}
+
+.meal-content {
+  width: calc(100% - 400px);
+  min-width: 500px;
+  border: 1px solid $grey3;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.meal-content-group {
+  margin: 20px;
+}
+
+.meal-content-header {
+  color: $blue8;
+  font-size: 18px;
+}
+
+.meal-type {
+  width: 200px;
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.ingredient-type-restriction {
+  display: flex;
+  margin-left: 20px;
+  margin-top: 10px;
+  color: $grey7;
+  font-size: 14px;
+  align-items: baseline;
+}
+
+.ingredient-type-label {
+  width: 150px;
+  text-align: end;
+  color: $grey10;
+  font-weight: bold;
+  margin-right: 20px; 
+}
+
+.days-container {
+  position: absolute;
+  width: 200px;
+  height: 400px;
+  background: white;
+  top: -1px;
+  right: -202px;
+  border-right: 1px solid $grey3;
+  border-top: 1px solid $grey3;
+  border-bottom: 1px solid $grey3;
+  display: flex;
+  flex-direction: column;
+}
+
+.days-header {
+  font-weight: bold;
+  margin: 20px;
+  margin-bottom: 15px;
+  color: $grey9;
+}
+
+.days {
+  margin-left: 20px;
+}
+
+.day {
+  display: flex;
+  align-items: baseline;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.day-label {
+  margin-right: 5px;
+  color: $grey6;
+  text-align: end;
+  width: 50%;
+}
+
+.days-button {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.delete-icon {
+  margin: 0px 15px 0px 40px;
+  color: $blue8;
+  cursor: pointer;
+}
+
+.buttons {
+  margin-left: auto;
+  margin-bottom: 120px;
+  margin-right: 20px;
+}

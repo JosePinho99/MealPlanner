@@ -1,0 +1,39 @@
+<div class="select-value header {{id}}" [ngStyle]="{'min-width': width + 'px'}" [ngClass]="{'active-value': dropdownOpen}" (click)="toggleDropdown()">
+  <span *ngIf="!multipleSelect" class="header {{id}}">{{selectedValue}}</span>
+  <div *ngIf="multipleSelect" class="header {{id}} multiple-select-container">
+    <div class="tag" *ngFor="let selectedVal of selectedValues">
+      {{selectedVal}}
+      <span class="close-tag" (click)="removeTag(selectedVal); $event.stopPropagation()">x</span>
+    </div>
+  </div>
+  <i class="header fa-solid fa-angle-down chevron {{id}}"></i>
+</div>
+
+<div class="not-closable select-dropdown {{id}}" *ngIf="dropdownOpen" 
+  [ngStyle]="{'width': width + 20 + 'px', 'max-height': subSelects.length === 0 ? '300px': 'unset', 'overflow': subSelects.length === 0 ? 'auto' : 'unset'}"
+>
+
+  <div *ngFor="let value of values" 
+      class="select-dropdown-value not-closable" 
+      [ngClass]="{'value-selected': selectedValues.includes(value)}"
+      (click)="selectOption(value)"
+      (mouseenter)="mouseHoverValue(value)"
+      (mouseleave)="mouseUnHoverValue(value)"
+  >
+    {{value}}
+    <ng-container *ngIf="hasSubSelect(value)">
+      <i class="fa-solid fa-caret-right open-sub-select-icon"></i>
+      <div *ngIf="subSelectToDisplay === value" class="sub-select-container not-closable select-dropdown {{id}}" [ngStyle]="{'left': (width + 20) + 'px'}">
+        <div class="not-closable select-dropdown-value {{id}}" 
+            *ngFor="let subSelectValue of specificSubSelectValues" 
+            [ngClass]="{'value-selected': selectedValues.includes(subSelectValue)}"
+            (click)="selectOption(subSelectValue)"
+          >
+          {{subSelectValue}}
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+</div>
+

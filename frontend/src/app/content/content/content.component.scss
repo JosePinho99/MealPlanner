@@ -1,0 +1,87 @@
+@import '../../utils/colors.scss';
+
+:host {
+  display: flex;
+  height: 100%;
+}
+
+.current-plans {
+  width: 100%;
+}
+
+.current-plans-header {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.current-plans-title {
+  margin: 10px 0px 0px 20px;
+  color: $grey10;
+  font-weight: bold;
+  font-size: $size2;
+}
+
+.current-plans-button {
+  margin-right: 15px;
+  overflow: hidden;
+  margin-left: 15px;
+}
+
+.no-plans {
+  margin-left: 20px;
+  margin-top: 10px;
+  font-size: $size1;
+  color: $grey6;
+}
+
+.content {
+  background: $grey2;
+  height: 100%;
+  flex-grow: 1;
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+.tabs {
+  display: flex;
+  height: 45px;
+  z-index: 10;
+  position: relative;
+}
+
+.tab {
+  padding: 10px 20px;
+  border-right: 1px solid $grey3;
+  border-left: unset;
+  border-top: unset;
+}
+
+.tab:hover {
+  background: $blue1;
+  cursor: pointer;
+}
+
+
+.tab-selected {
+  height: 31px;
+  border-right: 1px solid $grey3;
+  padding: 10px 20px;
+  padding-bottom: 5px;
+  border-bottom: unset;
+  background: white;
+}
+
+.main-content {
+  border-right: 1px solid $grey3;
+  border-top: 1px solid $grey3;
+  background: white;
+  width: calc(100% - 150px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
