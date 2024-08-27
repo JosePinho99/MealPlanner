@@ -3,11 +3,10 @@ import { Ingredient, Meal, NewPlan, Operator, Restriction } from '../../../../..
 import { defaultNewPlan, generatePlan } from '../utils';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
-import { generate } from 'rxjs';
 
 enum SubTab {
-  GLOBAL,
-  DAILY
+  GENERAL,
+  MEAL
 }
 
 @Component({
@@ -17,8 +16,7 @@ enum SubTab {
 })
 export class NewPlanComponent implements OnInit {
   subTabs = SubTab;
-  selectedSubTab = SubTab.GLOBAL;
-  operators = ['between', 'more than', 'less than', 'mix with', 'do not mix with', 'prohibit', 'force', 'allow consecutive'];
+  selectedSubTab = SubTab.GENERAL;
   selectedMeal: Meal;
   ingredientTypes = ['Main ingredients', 'Secondary ingredients', 'Extra ingredients']
   newPlan = {} as NewPlan;

@@ -38,8 +38,24 @@ export function improvePlan(plan: PlannedDay[],  errors: Error[], ingredients: I
     case ErrorType.HIGH_WEEKLY:
       improveHighWeekly(error, plan, ingredients, meals);
       break;
+    case ErrorType.DONT_REPEAT:
+      improveDontRepeat(error, plan, ingredients, meals);
+      break;
   }
 }
+
+function improveDontRepeat(error: Error, plan: PlannedDay[], ingredients: Ingredient[], meals: Meal[]) {
+  const day: PlannedDay = plan.find(p => p.day === error.day);
+  const repeatedMeal: PlannedMeal = day.meals.find(m => m.name === error.meal);
+  const mealConf: Meal = meals.find(m => m.name === repeatedMeal.name);
+  const ingredient: Ingredient = ingredients.find(i => i.name === error.ing1);
+  //Let's try to remove the ingredient or replace it of the repeated meal
+  if (tryToRemoveIngredient(ingredient, repeatedMeal, mealConf) || tryToReplaceIngredient(ingredient, ingredients, repeatedMeal, mealConf)) {
+    return;
+  }
+  //TODO Maybe as next step we should try to find the first meal of the repetition (kind of hard because its not simply getting the meal before, it depends on meal type)
+}
+
 
 function improveHighWeekly(error: Error, plan: PlannedDay[], ingredients: Ingredient[], meals: Meal[]) {
   //Trying to add or replace the ingredient to the multiple meals
@@ -62,10 +78,17 @@ function improveLowWeekly(error: Error, plan: PlannedDay[], ingredients: Ingredi
   for (let plannedDay of plan) {
     for (let meal of plannedDay.meals) {
       let mealConf: Meal = meals.find(m => m.name === meal.name);
-    if (tryToRemoveIngredient(ingredient, meal, mealConf) || tryToReplaceIngredient(ingredient, ingredients, meal, mealConf)) {
-      error.diff -= 1;
-      if (error.diff < 0) {return;}
-    }
+      if (tryToAddIngredient(ingredient, meal, mealConf)) {
+        error.diff -= 1;
+        if (error.diff < 0) {return;}
+      }
+      let ingredientToReplace: Ingredient = meal.ingredients.find(i => i.type === ingredient.type && i.allowedMeals.includes(mealConf.type));
+      if (ingredientToReplace) {
+        if (tryToReplaceIngredient(ingredientToReplace, ingredients, meal, mealConf, ingredient)) {
+          error.diff -= 1;
+          if (error.diff < 0) {return;}
+        }
+      }
     }
   }
 }

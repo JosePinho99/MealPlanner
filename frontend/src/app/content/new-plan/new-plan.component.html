@@ -1,22 +1,22 @@
 <div class="sub-tabs">
-  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.GLOBAL}" (click)="changeSubTab(subTabs.GLOBAL)">General settings</div>
-  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.DAILY}" (click)="changeSubTab(subTabs.DAILY)">Meals</div>
+  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.GENERAL}" (click)="changeSubTab(subTabs.GENERAL)">General settings</div>
+  <div class="sub-tab" [ngClass]="{'selected-sub-tab': selectedSubTab === subTabs.MEAL}" (click)="changeSubTab(subTabs.MEAL)">Meals</div>
 </div>
 
 
-<div *ngIf="selectedSubTab === subTabs.GLOBAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+<div *ngIf="selectedSubTab === subTabs.GENERAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
   <div class="restriction-block" style="margin-top: 10px; margin-bottom: 20px;">
     <p class="restriction-block-header">Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
     <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">
       <i class="fa-solid fa-eraser delete-icon" (click)="deleteDailyRestriction(i)"></i>
-      <app-restriction-line 
+      <app-restriction-line
         [newPlan]="newPlan"
         [restriction]="restriction"
         class="restriction-line">
       </app-restriction-line>
     </div>
   </div>
-  
+
   <div class="restriction-block" [ngStyle]="{'margin-top': '10px'}">
     <p class="restriction-block-header">Ingredient restrictions <i class="fa-solid fa-plus pointer" (click)="addIngredientRestriction()"></i></p>
     <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of newPlan.ingredientRestrictions; let i = index">
@@ -32,7 +32,7 @@
 </div>
 
 
-<div *ngIf="selectedSubTab === subTabs.DAILY" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+<div *ngIf="selectedSubTab === subTabs.MEAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
   <!-- MEALS -->
   <div class="restriction-block" style="margin-top: 0;">
     <div class="meals">
@@ -48,11 +48,11 @@
           <div class="meal-content-header">Ingredient distribution</div>
 
           <div class="ingredient-type-restriction" *ngFor="let ingredientType of ingredientTypes">
-            <div class="ingredient-type-label">{{ingredientType}}</div> 
+            <div class="ingredient-type-label">{{ingredientType}}</div>
             <div>
-              Minimum 
-              <input-component [model]="ingredientTypeRestriction(ingredientType, 'Min')" (changes)="changeIngredientTypeRestriction($event, ingredientType, 'Min')" [width]="40" [height]="20" [paddingLeft]="2" [ngStyle]="{'margin-right': '10px'}"></input-component> 
-              Maximum 
+              Minimum
+              <input-component [model]="ingredientTypeRestriction(ingredientType, 'Min')" (changes)="changeIngredientTypeRestriction($event, ingredientType, 'Min')" [width]="40" [height]="20" [paddingLeft]="2" [ngStyle]="{'margin-right': '10px'}"></input-component>
+              Maximum
               <input-component [model]="ingredientTypeRestriction(ingredientType, 'Max')" (changes)="changeIngredientTypeRestriction($event, ingredientType, 'Max')" [width]="40" [height]="20" [paddingLeft]="2"></input-component>
             </div>
           </div>

@@ -12,7 +12,7 @@ import { StateService } from 'src/app/state.service';
 export class RestrictionLineComponent implements OnInit {
   @Input() isIngredient: boolean = false;
   @Input() restriction: Restriction = {element: 'none', operator: Operator.Avoid, value: ['none']};
-  @Input() newPlan = {} as NewPlan; 
+  @Input() newPlan = {} as NewPlan;
 
   operators = [];
   values = [];
@@ -36,7 +36,7 @@ export class RestrictionLineComponent implements OnInit {
       this.state.ingredients.subscribe(ingredients => {
         this.values = ["All"].concat(ingredients.map(ing => ing.name));
       })
-      this.operators = [Operator.MoreThan, Operator.LessThan, Operator.Between, Operator.Prioritize, Operator.Avoid, Operator.Combine, Operator.DontCombine, Operator.DontRepeatInARow];
+      this.setOperatorsForSelection(this.restriction.element);
     } else {
       this.values = ['calories', 'proteins', 'price']
       this.operators = [Operator.MoreThan, Operator.LessThan, Operator.Between];
@@ -48,12 +48,16 @@ export class RestrictionLineComponent implements OnInit {
   }
 
   changeOperator(operator: Operator) {
-    this.restriction.operator = operator; 
+    this.restriction.operator = operator;
     this.restriction.value = [];
   }
 
   changeElement(value) {
     this.restriction.element = value;
+    this.setOperatorsForSelection(value);
+  }
+
+  setOperatorsForSelection(value) {
     if (value === "All") {
       this.operators = [Operator.MoreThan, Operator.LessThan, Operator.Between, Operator.DontRepeatInARow];
     } else {

@@ -29,10 +29,8 @@ function fillMeal(mealConfig: Meal, ingredients: Ingredient[]): PlannedMeal {
   let mealType = mealConfig.type;
   shuffleArray(ingredients);
   for (let ing of ingredients) {
-    // @ts-ignore
     if (ing.allowedMeals.includes(mealType) && remainIngTypes.get(ing.type) > 0) {
       addIngredient(meal, ing);
-      // @ts-ignore
       remainIngTypes.set(ing.type, remainIngTypes.get(ing.type) - 1);
     }
     if (
@@ -43,10 +41,8 @@ function fillMeal(mealConfig: Meal, ingredients: Ingredient[]): PlannedMeal {
       return meal;
     }
   }
-  console.error(mealConfig.name, remainIngTypes);
-  // @ts-ignore
+  console.error(mealConfig.name, remainIngTypes, "ERROR, NOT ENOUGH INGREDIENTS TO FULLFILL MINIMUM MEAL QUANTITIES REQUIREMENTS");
   return null;
-  //ERROR, NOT ENOUGH INGREDIENTS TO FULLFILL MINIMUM MEAL QUANTITIES REQUIREMENTS
 }
 
 function getEmptyPlan(): PlannedDay[] {

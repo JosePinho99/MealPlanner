@@ -1,4 +1,16 @@
-import { ErrorType, Operator, PlannedDay, Restriction, Validator, ValidatorLimits, Error, PlannedMeal, MealType, Ingredient } from "./interfaces";
+import {
+  ErrorType,
+  Operator,
+  PlannedDay,
+  Restriction,
+  Validator,
+  ValidatorLimits,
+  Error,
+  PlannedMeal,
+  MealType,
+  Ingredient,
+  Meal
+} from "./interfaces";
 
 
 //Here we prepare the data structures necessary to validate one meal plan in a more direct way
@@ -21,19 +33,35 @@ export function getValidatorObject(dailyRestrictions: Restriction[], ingredientR
   });
 
   ingredientRestrictions.forEach(restriction => {
-    if (restriction.element === "All") {
-      for (let ingredient of ingredients) {
-        
+    if (restriction.operator === Operator.LessThanDaily || restriction.operator === Operator.BetweenDaily || restriction.operator === Operator.MoreThanDaily) {
+      let ingredientList = restriction.element === "All" ? ingredients.map(i => i.name) : [restriction.element];
+      for (let ingredient of ingredientList) {
+        const ingredientLimits = validatorObject.ingDaily.find(vo => vo.ing === ingredient);
+        let limits: ValidatorLimits = {max: ingredientLimits?.max ?? Number.MAX_VALUE, min: ingredientLimits?.min ?? 0};
+        fillValidatorObject(limits, restriction, Operator.MoreThanDaily, Operator.LessThanDaily, Operator.BetweenDaily);
+        if (!ingredientLimits) {
+          validatorObject.ingDaily.push({...limits, ing: ingredient});
+        } else {
+          ingredientLimits.min = limits.min;
+          ingredientLimits.max = limits.max;
+        }
       }
-    } 
+    }
 
-    let limits: ValidatorLimits = {max: Number.MAX_VALUE, min: 0};
-    fillValidatorObject(limits, restriction, Operator.MoreThanDaily, Operator.LessThanDaily, Operator.BetweenDaily);
-    validatorObject.ingDaily.push({...limits, ing: restriction.element});
-
-    limits = {max: Number.MAX_VALUE, min: 0};
-    fillValidatorObject(limits, restriction, Operator.MoreThanWeekly, Operator.LessThanWeekly, Operator.BetweenWeekly);
-    if (limits) { validatorObject.ingWeekly.push({...limits, ing: restriction.element}); }
+    if (restriction.operator === Operator.LessThanWeekly || restriction.operator === Operator.BetweenWeekly || restriction.operator === Operator.MoreThanWeekly) {
+      let ingredientList = restriction.element === "All" ? ingredients.map(i => i.name) : [restriction.element];
+      for (let ingredient of ingredientList) {
+        const ingredientLimits = validatorObject.ingWeekly.find(vo => vo.ing === ingredient);
+        let limits: ValidatorLimits = {max: ingredientLimits?.max ?? Number.MAX_VALUE, min: ingredientLimits?.min ?? 0};
+        fillValidatorObject(limits, restriction, Operator.MoreThanWeekly, Operator.LessThanWeekly, Operator.BetweenWeekly);
+        if (!ingredientLimits) {
+          validatorObject.ingWeekly.push({...limits, ing: ingredient});
+        } else {
+          ingredientLimits.min = limits.min;
+          ingredientLimits.max = limits.max;
+        }
+      }
+    }
 
     if (restriction.operator === Operator.Prioritize) {
       validatorObject.prioritizes.push({day: restriction.value[0].split(" ")[0], mealName: restriction.value[0].split(" ")[1], ing: restriction.element}); 
@@ -48,7 +76,10 @@ export function getValidatorObject(dailyRestrictions: Restriction[], ingredientR
       validatorObject.dontCombines.push({ing1: restriction.element, ing2: restriction.value[0]}); 
     }
     if (restriction.operator === Operator.DontRepeatInARow) {
-      validatorObject.dontRepeats.push(restriction.element);
+      let ingredientList = restriction.element === "All" ? ingredients.map(i => i.name) : [restriction.element];
+      for (let ingredient of ingredientList) {
+        validatorObject.dontRepeats.push(ingredient);
+      }
     }
   });
   return validatorObject;
@@ -70,16 +101,17 @@ function fillValidatorObject(limits: ValidatorLimits, restriction: Restriction, 
 
 //Validate the plan, returning a list of errors
 //Done so that if a plan can't fullfill all criteria, it still is able to return suggestions close to the requested
-export function validatePlan(plan: PlannedDay[], validator: Validator) {
+export function validatePlan(plan: PlannedDay[], validator: Validator, ingredients: Ingredient[], meals: Meal[]) {
   const errors: Error[] = [];
   let weeklyIngredients: string[] = [];
-  let lastMealIngredients = new Map<MealType, string[]>();
+  let lastMealIngredients: string[] = [];
   plan.forEach(plannedDay=> {
     let dailyCals = 0;
     let dailyPrice = 0;
     let dailyProteins = 0;
     let dailyIngredients: string[] = [];
     plannedDay.meals.forEach(plannedMeal => {
+      lastMealIngredients = validateDontRepeats(validator, plannedDay, plannedMeal, lastMealIngredients, errors, ingredients, meals);
       plannedMeal.ingredients.forEach(ing => {
         dailyIngredients.push(ing.name);
         weeklyIngredients.push(ing.name);
@@ -100,6 +132,29 @@ export function validatePlan(plan: PlannedDay[], validator: Validator) {
   });
   validateWeeklyIngredients(validator, errors, weeklyIngredients);
   return errors;
+}
+
+function validateDontRepeats(validator: Validator, plannedDay: PlannedDay, plannedMeal: PlannedMeal, lastMealIngredients: string[], errors: Error[], ingredients: Ingredient[], meals: Meal[]) {
+  let currentMealIngredients = plannedMeal.ingredients.map(i => i.name);
+  const mealType = meals.find(m => m.name === plannedMeal.name).type;
+  for (let ingName of validator.dontRepeats) {
+    const ing = ingredients.find(i => i.name === ingName);
+    if (currentMealIngredients.includes(ingName) && lastMealIngredients.includes(ingName)) {
+      errors.push({type: ErrorType.DONT_REPEAT, day: plannedDay.day, meal: plannedMeal.name, ing1: ingName});
+    }
+    //An ingredient could be used on this meal, but it wasn't, so we can remove it from last meal.
+    //We need to have this type of logic to deal with ingredients that can only be used for lunch and dinner for example
+    //Without it, if they were not in the afternoon snack they wouldn't count as repeating even though they would be in both lunch and dinner
+    if (ing.allowedMeals.includes(mealType) && !currentMealIngredients.includes(ingName) && lastMealIngredients.includes(ingName)) {
+      lastMealIngredients = lastMealIngredients.slice(lastMealIngredients.indexOf(ingName), 1);
+    }
+  }
+  for (let ing of currentMealIngredients) {
+    if (!lastMealIngredients.includes(ing)) {
+      lastMealIngredients.push(ing);
+    }
+  }
+  return lastMealIngredients;
 }
 
 
@@ -172,6 +227,7 @@ export function scorePlan(errors: Error[]) {
         break;
       case ErrorType.DONT_COMBINE:
       case ErrorType.AVOID:
+      case ErrorType.DONT_REPEAT:
       case ErrorType.PRIORITIZE:
         score += 2;
         break;

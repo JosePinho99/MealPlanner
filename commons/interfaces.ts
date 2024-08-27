@@ -21,7 +21,7 @@ export interface NewPlan {
 export interface Restriction {
   element: string,
   operator: Operator,
-  value: string[]
+  value?: string[]
 }
 
 export enum Operator {
