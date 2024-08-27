@@ -1,11 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Ingredient } from '../../../../../commons/interfaces';
+import {GeneratedPlan, Ingredient} from '../../../../../commons/interfaces';
+import {StateService} from "../../state.service";
 
-enum Tab {
+interface Tab {
+  name: string,
+  type: TabType,
+  data ?: any
+}
+
+enum TabType {
   INGREDIENTS = 'Ingredients',
   NEW_PLAN = 'New Plan',
   NEW_INGREDIENT = 'New Ingredient',
-  EDIT_INGREDIENT = 'Edit Ingredient'
+  EDIT_INGREDIENT = 'Edit Ingredient',
+  GENERATED_PLAN = 'Generated Plan'
 }
 
 @Component({
@@ -14,54 +22,68 @@ enum Tab {
   styleUrls: ['./content.component.scss']
 })
 export class ContentComponent implements OnInit {
-  tabEnum = Tab;
-  tabs: Tab[] = [Tab.INGREDIENTS, Tab.NEW_PLAN];
-  selectedTab: Tab = Tab.INGREDIENTS;
-  contentFullSize: boolean = true;
-  ingredientToEdit: Ingredient;
+  TabType = TabType;
+  tabs: Tab[] = [
+    {name: 'Ingredients', type: TabType.INGREDIENTS},
+    {name: 'New Plan', type: TabType.NEW_PLAN},
+  ];
+  selectedTab: Tab = this.tabs[0];
+  currentIngredients: Ingredient[];
 
-  constructor() { }
+  constructor(private state: StateService,) { }
 
   ngOnInit(): void {
+    this.state.ingredients.subscribe(ingredients => {
+      this.currentIngredients = ingredients;
+    });
   }
 
   newIngredient() {
-    if (!this.tabs.includes(Tab.NEW_INGREDIENT)) {
-      this.tabs.push(Tab.NEW_INGREDIENT);
+    let newIngredientTab = this.tabs.find(t => t.type === TabType.NEW_INGREDIENT);
+    if (!newIngredientTab) {
+      newIngredientTab = {name: 'New Ingredient', type: TabType.NEW_INGREDIENT};
+      this.tabs.push(newIngredientTab);
     }
-    this.selectedTab = Tab.NEW_INGREDIENT;
+    this.selectedTab = newIngredientTab;
   }
 
   editIngredient(ingredient: Ingredient) {
-    this.ingredientToEdit = ingredient;
-    if (!this.tabs.includes(Tab.EDIT_INGREDIENT)) {
-      this.tabs.push(Tab.EDIT_INGREDIENT);
+    let editIngredientTab = this.tabs.find(t => t.type === TabType.EDIT_INGREDIENT && t.name === ingredient.name);
+    if (!editIngredientTab) {
+      editIngredientTab = {name: ingredient.name, type: TabType.EDIT_INGREDIENT, data: ingredient}
+      this.tabs.push(editIngredientTab);
     }
-    this.selectedTab = Tab.EDIT_INGREDIENT;
+    this.selectedTab = editIngredientTab;
   }
 
   newPlan() {
-    if (!this.tabs.includes(Tab.NEW_PLAN)) {
-      this.tabs.push(Tab.NEW_PLAN);
+    let newPlanTab = this.tabs.find(t => t.type === TabType.NEW_PLAN);
+    if (!newPlanTab) {
+      newPlanTab = {name: 'New Plan', type: TabType.NEW_PLAN};
+      this.tabs.push(newPlanTab);
     }
-    this.selectedTab = Tab.NEW_PLAN;
+    this.selectedTab = newPlanTab;
   }
 
   selectTab(tab: Tab) {
     this.selectedTab = tab;
-    if (tab !== Tab.NEW_PLAN) {
-      this.contentFullSize = true;
-    }
   }
 
   endedAddingEditingIngredient(action: string) {
-    this.selectedTab = Tab.INGREDIENTS;
-    let index = 0
-    if (action === 'edit') {
-      index = this.tabs.indexOf(Tab.EDIT_INGREDIENT);
-    } else {
-      index = this.tabs.indexOf(Tab.NEW_INGREDIENT);
-    }
-    this.tabs.splice(index, 1);
+    //   this.selectedTab = {name: 'Ingredients', type: TabType.INGREDIENTS};
+    //   let index = 0
+    //   if (action === 'edit') {
+    //     index = this.tabs.indexOf({Tab.EDIT_INGREDIENT});
+    //   } else {
+    //     index = this.tabs.indexOf(Tab.NEW_INGREDIENT);
+    //   }
+    //   this.tabs.splice(index, 1);
+    // }
+  }
+
+  generatedPlan(plan: GeneratedPlan) {
+    const planTab = {name: 'Yahp', type: TabType.GENERATED_PLAN, data: plan};
+    this.tabs.push(planTab);
+    this.selectedTab = planTab;
   }
 }

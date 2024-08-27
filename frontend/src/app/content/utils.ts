@@ -1,5 +1,15 @@
 
-import { Ingredient, Meal, MealType, NewPlan, Operator, PlannedDay, Validator, Error } from "../../../../commons/interfaces";
+import {
+  Ingredient,
+  Meal,
+  MealType,
+  NewPlan,
+  Operator,
+  PlannedDay,
+  Validator,
+  Error,
+  GeneratedPlan
+} from "../../../../commons/interfaces";
 import { getStartingPlan } from "../../../../commons/starting-plan";
 import { getValidatorObject, scorePlan, validatePlan } from "../../../../commons/validation";
 import { improvePlan } from "../../../../commons/improve";
@@ -35,7 +45,7 @@ export function defaultNewPlan() {
 }
 
 
-export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[]) {
+export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[]): GeneratedPlan {
   const validator: Validator = getValidatorObject(planConfig.dailyRestrictions, planConfig.ingredientRestrictions, ingredients);
   let bestScore = Number.MAX_VALUE;
   let bestPlan: PlannedDay[] = null;
@@ -53,10 +63,7 @@ export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[]) {
       }
     }
   }
-
-  console.log(bestPlan);
-  console.log(bestScore);
-  console.log(finalErrors);
+  return {plannedDays: bestPlan, errors: finalErrors};
 }
 
 export function generatePlanEvolution(planConfig: NewPlan, ingredients: Ingredient[], validator: Validator, improveAttempts: number) {

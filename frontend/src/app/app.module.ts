@@ -15,6 +15,7 @@ import { RestrictionLineComponent } from './content/new-plan/restriction-line/re
 import { InputModule } from './components/input/input.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { GeneratedPlanComponent } from './content/generated-plan/generated-plan.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     NewIngredientComponent,
     NewPlanComponent,
     RestrictionLineComponent,
+    GeneratedPlanComponent,
   ],
   imports: [
     HttpClientModule,

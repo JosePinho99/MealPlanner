@@ -1,0 +1,9 @@
+pre {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  overflow: auto;
+  white-space: pre-wrap; /* This ensures that the text breaks and wraps */
+  word-wrap: break-word;  /* This prevents long strings from breaking the layout */
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}

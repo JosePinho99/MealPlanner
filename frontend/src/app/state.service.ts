@@ -8,6 +8,7 @@ import { Ingredient, IngredientType, MealType, NewPlan } from '../../../commons/
 export class StateService {
   newPlan: NewPlan = null;
   newIngredient: Ingredient = null;
+  editedIngredients: Ingredient[] = [];
   ingredients: BehaviorSubject<Ingredient[]> = new BehaviorSubject<Ingredient[]>([]);
   constructor() { }
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Ingredient, Meal, NewPlan, Operator, Restriction } from '../../../../../commons/interfaces';
+import {GeneratedPlan, Ingredient, Meal, NewPlan, Operator, Restriction} from '../../../../../commons/interfaces';
 import { defaultNewPlan, generatePlan } from '../utils';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
@@ -24,8 +24,7 @@ export class NewPlanComponent implements OnInit {
   dailyMeals: Meal[] = [];
   ingredients: Ingredient[] = [];
 
-  @Output() contentFullSize = new EventEmitter<boolean>();
-
+  @Output() generatedPlan = new EventEmitter<GeneratedPlan>();
 
   constructor(private state: StateService,
     private http: HttpClient) { }
@@ -43,7 +42,6 @@ export class NewPlanComponent implements OnInit {
 
   changeSubTab(subTab: SubTab) {
     this.selectedSubTab = subTab;
-    this.contentFullSize.emit(true);
   }
 
 
@@ -101,8 +99,8 @@ export class NewPlanComponent implements OnInit {
 
 
   save() {
-    console.log(this.newPlan)
-    generatePlan(this.newPlan, this.ingredients);
-    this.http.post('http://localhost:3000', this.newPlan).subscribe(_ => console.log(_));
+    const plan: GeneratedPlan = generatePlan(this.newPlan, this.ingredients);
+    this.generatedPlan.emit(plan);
+    // this.http.post('http://localhost:3000', this.newPlan).subscribe(_ => console.log(_));
   }
 }

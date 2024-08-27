@@ -11,43 +11,48 @@
 <div class="content">
   <div class="tabs">
     <div *ngFor="let tab of tabs"
-        [ngClass]="{'tab': tab !== selectedTab, 'tab-selected': tab === selectedTab}"
+        [ngClass]="{'tab': tab !== selectedTab, 'tab-selected': tab === selectedTab, 'tab-plan-related': tab.type === TabType.NEW_PLAN}"
         (click)="selectTab(tab)"
     >
-      {{tab}}
+      {{tab.name}}
     </div>
   </div>
 
-  <app-ingredients 
-    *ngIf="selectedTab === tabEnum.INGREDIENTS" 
-    class="main-content" 
+  <app-ingredients
+    *ngIf="selectedTab.type === TabType.INGREDIENTS"
+    class="main-content"
     (newIngredientOutput)="newIngredient()"
     (editIngredientOutput)="editIngredient($event)"
   >
-</app-ingredients>
-  
-  <app-new-ingredient 
-    *ngIf="selectedTab === tabEnum.NEW_INGREDIENT" 
+  </app-ingredients>
+
+  <app-new-ingredient
+    *ngIf="selectedTab.type === TabType.NEW_INGREDIENT"
     [edit]="false"
     class="main-content"
     (processFinalized)="endedAddingEditingIngredient($event)"
   >
   </app-new-ingredient>
 
-  <app-new-ingredient 
-    *ngIf="selectedTab === tabEnum.EDIT_INGREDIENT" 
+  <app-new-ingredient
+    *ngIf="selectedTab.type === TabType.EDIT_INGREDIENT"
     [edit]="true"
-    [ingredient]="ingredientToEdit"
+    [ingredient]="selectedTab.data"
     class="main-content"
     (processFinalized)="endedAddingEditingIngredient($event)"
   >
   </app-new-ingredient>
-  
-  <app-new-plan 
-    *ngIf="selectedTab === tabEnum.NEW_PLAN" 
-    class="main-content" 
-    (contentFullSize)="contentFullSize = $event" 
-    [ngStyle]="{'width': contentFullSize ? 'calc(100% - 50px)': 'calc(100% - 250px)'}" 
+
+  <app-new-plan
+    *ngIf="selectedTab.type === TabType.NEW_PLAN"
+    class="main-content"
+    (generatedPlan)="generatedPlan($event)"
   >
   </app-new-plan>
+
+  <app-generated-plan
+    *ngIf="selectedTab.type === TabType.GENERATED_PLAN"
+    class="main-content"
+    [plan]="selectedTab.data"
+  ></app-generated-plan>
 </div>
