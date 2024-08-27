@@ -142,7 +142,7 @@
   text-align: end;
   color: $grey10;
   font-weight: bold;
-  margin-right: 20px; 
+  margin-right: 20px;
 }
 
 .days-container {
@@ -204,4 +204,18 @@
   margin-left: auto;
   margin-bottom: 120px;
   margin-right: 20px;
+}
+
+.block {
+  display: flex;
+  margin-top: 20px;
+  align-items: center;
+  margin-left: 20px;
+}
+
+.block-label {
+  text-align: end;
+  margin-right: 10px;
+  color: $blue9;
+  font-weight: bold;
 }

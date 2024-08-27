@@ -45,7 +45,7 @@ export function defaultNewPlan() {
 }
 
 
-export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[]): GeneratedPlan {
+export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[], planName: string): GeneratedPlan {
   const validator: Validator = getValidatorObject(planConfig.dailyRestrictions, planConfig.ingredientRestrictions, ingredients);
   let bestScore = Number.MAX_VALUE;
   let bestPlan: PlannedDay[] = null;
@@ -63,7 +63,7 @@ export function generatePlan(planConfig: NewPlan, ingredients: Ingredient[]): Ge
       }
     }
   }
-  return {plannedDays: bestPlan, errors: finalErrors};
+  return {plannedDays: bestPlan, errors: finalErrors, name: planName};
 }
 
 export function generatePlanEvolution(planConfig: NewPlan, ingredients: Ingredient[], validator: Validator, improveAttempts: number) {

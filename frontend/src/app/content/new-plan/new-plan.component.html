@@ -5,6 +5,12 @@
 
 
 <div *ngIf="selectedSubTab === subTabs.GENERAL" [ngStyle]="{'overflow': 'auto', 'height': 'calc(100vh - 200px)'}">
+
+  <div class="block">
+    <p class="block-label">Name</p>
+    <input-component [type]="'text'" [model]="planName" (changes)="planName = $event"></input-component>
+  </div>
+
   <div class="restriction-block" style="margin-top: 10px; margin-bottom: 20px;">
     <p class="restriction-block-header">Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
     <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">

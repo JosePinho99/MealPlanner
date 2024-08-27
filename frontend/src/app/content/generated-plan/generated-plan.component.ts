@@ -17,6 +17,7 @@ export class GeneratedPlanComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges() {
+    console.log(this.plan);
     this.teste = JSON.stringify(this.plan);
   }
 

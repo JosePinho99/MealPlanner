@@ -23,6 +23,7 @@ export class NewPlanComponent implements OnInit {
   dailyRestrictions: Restriction[] = [];
   dailyMeals: Meal[] = [];
   ingredients: Ingredient[] = [];
+  planName: string = 'New plan';
 
   @Output() generatedPlan = new EventEmitter<GeneratedPlan>();
 
@@ -99,7 +100,7 @@ export class NewPlanComponent implements OnInit {
 
 
   save() {
-    const plan: GeneratedPlan = generatePlan(this.newPlan, this.ingredients);
+    const plan: GeneratedPlan = generatePlan(this.newPlan, this.ingredients, this.planName);
     this.generatedPlan.emit(plan);
     // this.http.post('http://localhost:3000', this.newPlan).subscribe(_ => console.log(_));
   }

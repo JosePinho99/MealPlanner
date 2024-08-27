@@ -82,7 +82,7 @@ export class ContentComponent implements OnInit {
   }
 
   generatedPlan(plan: GeneratedPlan) {
-    const planTab = {name: 'Yahp', type: TabType.GENERATED_PLAN, data: plan};
+    const planTab = {name: plan.name, type: TabType.GENERATED_PLAN, data: plan};
     this.tabs.push(planTab);
     this.selectedTab = planTab;
   }
