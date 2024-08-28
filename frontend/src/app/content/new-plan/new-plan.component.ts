@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {GeneratedPlan, Ingredient, Meal, NewPlan, Operator, Restriction} from '../../../../../commons/interfaces';
-import { defaultNewPlan, generatePlan } from '../utils';
+import { defaultNewPlan } from '../utils';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
 
@@ -100,8 +100,9 @@ export class NewPlanComponent implements OnInit {
 
 
   save() {
-    const plan: GeneratedPlan = generatePlan(this.newPlan, this.ingredients, this.planName);
-    this.generatedPlan.emit(plan);
-    // this.http.post('http://localhost:3000', this.newPlan).subscribe(_ => console.log(_));
+    this.http.post('http://localhost:3000/createPlan', [this.newPlan, this.ingredients]).subscribe((plan: GeneratedPlan) => {
+      console.log(plan);
+      this.generatedPlan.emit(plan);
+    });
   }
 }
