@@ -3,9 +3,13 @@
     <div class="nav-entry">Meal plan</div>
   </div>
 
+
+
   <div class="nav-user">
-    <i class="fa-solid fa-circle-user user-icon"></i>
-    <span>José Pinho</span>
+    <i class="fa-solid fa-circle-user user-icon" [ngStyle]="{'margin-right': loggedIn ? '10px' : '0px'}"></i>
+
+    <button-component *ngIf="!loggedIn" [type]="'tertiary'" (click)="openLoginModal()">Log in</button-component>
+    <span *ngIf="loggedIn">José Pinho</span>
   </div>
 </div>
 

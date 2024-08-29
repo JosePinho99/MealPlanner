@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StateService } from './state.service';
 import { HttpClient } from '@angular/common/http';
-import { Ingredient } from '../../../commons/interfaces';
 
 @Component({
   selector: 'app-root',
@@ -14,10 +13,16 @@ export class AppComponent implements OnInit {
     private http: HttpClient
   ) { }
 
+  loggedIn = false;
+
   ngOnInit() {
     this.state.setIngredients();
     // this.http.get('http://127.0.0.1:3000/getIngredients/').subscribe((ingredients: Ingredient[]) => {
     //   this.state.setIngredients(ingredients);
     // });
+  }
+
+  openLoginModal() {
+
   }
 }

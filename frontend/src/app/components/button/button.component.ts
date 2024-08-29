@@ -14,7 +14,7 @@ export enum ButtonType {
 export class ButtonComponent implements OnInit {
   buttonTypes = ButtonType;
 
-  @Input() title: string = 'Button title';
+  @Input() title: string;
   @Input() type = 'main';
   @Input() size = 'medium';
 
