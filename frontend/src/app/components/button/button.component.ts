@@ -17,6 +17,8 @@ export class ButtonComponent implements OnInit {
   @Input() title: string;
   @Input() type = 'main';
   @Input() size = 'medium';
+  @Input() fillWidth: boolean = false;
+  @Input() loading: boolean = false;
 
   constructor() { }
 

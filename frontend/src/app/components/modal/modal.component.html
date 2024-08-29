@@ -1,0 +1,10 @@
+<div class="modal">
+  <div *ngIf="title" class="modal-header">
+    {{title}}
+  </div>
+
+
+  <div class="modal-body" [ngStyle]="{'width': width ?? 'unset', 'height': height ?? 'unset'}">
+    <ng-content></ng-content>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from './button.component';
+import {LoadingComponent} from "../loading/loading.component";
 
 
 
@@ -8,9 +9,10 @@ import { ButtonComponent } from './button.component';
   declarations: [
     ButtonComponent
   ],
-  imports: [
-    CommonModule
-  ],
+    imports: [
+        CommonModule,
+        LoadingComponent
+    ],
   exports: [
     ButtonComponent
   ]

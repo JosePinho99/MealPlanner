@@ -1,7 +1,10 @@
-<input 
-      class="input-container" 
-      [type]="type" 
+<input
+      #input
+      class="input-container"
+      [type]="type"
       [(ngModel)]="model"
+      [placeholder]="placeholder ?? ''"
       (change)="changeMade()"
-      [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px'}"
+
+      [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
 />

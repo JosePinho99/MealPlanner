@@ -1,10 +1,13 @@
+<loading-component *ngIf="loading" [top]="'7px'" [left]="'5px'" [spinnerSize]="'20px'"></loading-component>
+
 <button [ngClass]="
   {
    'main-button': type === buttonTypes.Main,
    'secondary-button': type === buttonTypes.Secondary,
    'tertiary-button': type === buttonTypes.Tertiary
   }"
-  [ngStyle]="{'height': size === 'big' ? '35px' : '25px', 'padding': size === 'big' ? '5px 20px' :'5px 10px'}"
+        [disabled]="loading"
+  [ngStyle]="{'height': size === 'big' ? '35px' : '25px', 'padding': size === 'big' ? '5px 20px' :'5px 10px', 'width': fillWidth ? '100%' : 'unset'}"
 >
   <ng-content></ng-content>
   {{title}}
