@@ -2,48 +2,30 @@ import express, {Request, Response} from 'express';
 import cors from 'cors';
 import {GeneratedPlan, PlannedDay} from "../commons/interfaces";
 import {generatePlan} from "./core/planner";
-import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
-import {hashPassword, verifyPassword} from "./logIn";
+import {router as authRouter} from "./src/api/routes/authRoutes";
 
-dotenv.config();
-const connectionString = process.env.DATABASE_URL;
-const pool = new Pool({
-    connectionString,
-});
 
 const app = express();
+const port = 3000;
+
 app.use(cors());
 app.use(express.json());
-const port = 3000;
+
+
+// Routes
+app.use('/auth', authRouter);
 
 
 
 app.post('/createPlan', (req: Request, res: Response) => {
-    const plan: GeneratedPlan = generatePlan(req.body[0], req.body[1], "hello");
-    res.status(200).json(plan);
-});
-
-app.get('/logIn', async (req: Request, res: Response) => {
-    try {
-        const queryText = 'SELECT "password" FROM public."Users" WHERE "name" = $1';
-        const result = await pool.query(queryText, [req.query.username]);
-        if (result.rows.length === 1) {
-            const hashedPassword = result.rows[0].password;
-            const isPasswordCorrect = await verifyPassword(req.query.password, hashedPassword);
-            if (isPasswordCorrect) {
-                res.status(200).json("Success");
-            } else {
-                res.status(200).json("Incorrect password");
-            }
-        } else {
-            res.status(200).json("User not found");
-        }
-    } catch (error) {
-        res.status(200).json("Unknown error");
+    const token = req.headers['authorization'];
+    if (true) {
+        const plan: GeneratedPlan = generatePlan(req.body[0], req.body[1], "hello");
+        res.status(200).json(plan);
+    } else {
+        res.status(401).json("Not Authorized");
     }
 });
-
 
 app.listen(port, async () => {
     // const password = await hashPassword("Kaxinas99!!");

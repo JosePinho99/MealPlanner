@@ -18,6 +18,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { GeneratedPlanComponent } from './content/generated-plan/generated-plan.component';
 import {ModalComponent} from "./components/modal/modal.component";
 import {LoadingComponent} from "./components/loading/loading.component";
+import {LogInModalComponent} from "./content/log-in-modal/log-in-modal.component";
 
 @NgModule({ declarations: [
         AppComponent,
@@ -28,12 +29,13 @@ import {LoadingComponent} from "./components/loading/loading.component";
         RestrictionLineComponent,
         GeneratedPlanComponent,
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
-    PanelModule,
-    ButtonModule,
-    TableModule,
-    SearchModule,
-    SelectModule,
-    InputModule,
-    FormsModule, ModalComponent, LoadingComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
+    bootstrap: [AppComponent],
+    imports: [BrowserModule,
+        PanelModule,
+        ButtonModule,
+        TableModule,
+        SearchModule,
+        SelectModule,
+        InputModule,
+        FormsModule, ModalComponent, LoadingComponent, LogInModalComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

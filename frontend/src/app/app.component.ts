@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { StateService } from './state.service';
+import {LogCredentials} from "./types/user";
 import {LogInService} from "./api/log-in.service";
 
 @Component({
@@ -14,45 +15,36 @@ export class AppComponent implements OnInit {
   ) { }
 
   loadingPage: boolean = false;
-
-  loggedUser: string;
   displayLoginModal: boolean = false;
-  loadingLogIn: boolean = false;
-  username: string = '';
-  password: string = '';
-  logInError: string = '';
+  loggedUser: string;
 
   ngOnInit() {
+    if (localStorage.getItem('token')) {
+      this.loadingPage = true;
+      this.logInService.verifyToken(localStorage.getItem('token')).subscribe(response =>  {
+        if (response.success) {
+          this.loggedUser = response['username'];
+        }
+        this.loadingPage = false;
+      });
+    }
     this.state.setIngredients();
-    // this.http.get('http://127.0.0.1:3000/getIngredients/').subscribe((ingredients: Ingredient[]) => {
-    //   this.state.setIngredients(ingredients);
-    // });
   }
 
-  closeModal() {
+
+
+  login(credentials: LogCredentials) {
+    //TODO Recover password
+    //TODO Backend for above things
+    localStorage.setItem('token', credentials.token);
     this.displayLoginModal = false;
+    this.loggedUser = credentials.username;
   }
 
-  logIn() {
-    this.loadingLogIn = true;
-    this.logInService.logIn(this.username, this.password).subscribe(response => {
-      if (response === "Success") {
-        this.displayLoginModal = false;
-        this.logInError = '';
-        this.username = '';
-        this.password = '';
-        this.getUserData();
-      } else {
-        this.logInError = response;
-      }
-      this.loadingLogIn = false;
-    });
-  }
 
   getUserData() {
     this.loadingPage = true;
     setTimeout(() => {
-      this.loggedUser = 'Jose Pinho';
       this.loadingPage = false
     }, 500);
   }

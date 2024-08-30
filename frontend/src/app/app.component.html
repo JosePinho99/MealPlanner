@@ -16,22 +16,5 @@
 
 
 <modal-component *ngIf="displayLoginModal">
-  <div class="login-content" (click)="$event.stopPropagation()">
-    <h2 class="login-title">Welcome back</h2>
-    <span class="extra-info error" *ngIf="logInError">{{logInError}}</span>
-    <input-component [placeholder]="'Username'" [type]="'text'" [focus]="true"
-                     [fontSize]="'0.9rem'"  [width]="250" [height]="26" [model]="username" (changes)="username = $event"
-                     style="margin-top: 30px; margin-bottom: 15px"
-    ></input-component>
-
-    <input-component [placeholder]="'Password'"  [type]="'password'" [fontSize]="'0.9rem'"
-                     [width]="250" [height]="26" [model]="password" (changes)="password = $event"
-    ></input-component>
-
-    <span class="link extra-info">Recover password</span>
-    <button-component [loading]="loadingLogIn" [fillWidth]="true" style="width: 250px; margin-top: 40px" [size]="'big'" (click)="logIn()">Log in</button-component>
-    <button-component [type]="'secondary'" [fillWidth]="true" style="width: 250px; margin-top: 10px" [size]="'big'" (click)="closeModal()">Cancel</button-component>
-
-    <span class="extra-info" style="width: 250px; margin-top: 5px">Not a member yet?<span class="link extra-info" style="margin-left: 5px">Register</span></span>
-  </div>
+  <app-log-in-modal (close)="displayLoginModal = false" (login)="login($event)"></app-log-in-modal>
 </modal-component>

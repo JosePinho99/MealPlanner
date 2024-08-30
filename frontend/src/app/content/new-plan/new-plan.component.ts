@@ -100,7 +100,7 @@ export class NewPlanComponent implements OnInit {
 
 
   save() {
-    this.http.post('http://localhost:3000/createPlan', [this.newPlan, this.ingredients]).subscribe((plan: GeneratedPlan) => {
+    this.http.post('http://localhost:3000/createPlan', [this.newPlan, this.ingredients], {headers: {authorization: localStorage.getItem("token") ?? "unsigned"}}).subscribe((plan: GeneratedPlan) => {
       console.log(plan);
       this.generatedPlan.emit(plan);
     });

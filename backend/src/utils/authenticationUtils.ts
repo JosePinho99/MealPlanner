@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export async function hashPassword(password: string): Promise<string> {
     const saltRounds: number = 10; // The cost factor for hashing
@@ -10,13 +11,6 @@ export async function hashPassword(password: string): Promise<string> {
     }
 }
 
-// async function registerUser(username: string, password: string): Promise<void> {
-//     const hashedPassword = await hashPassword(password);
-//     const newUser: User = { username, password: hashedPassword };
-//     // Assume saveUser is a function that saves the user's data to the database.
-//     await saveUser(newUser);
-// }
-
 export async function verifyPassword(userSubmittedPassword: string, storedHashedPassword: string): Promise<boolean> {
     try {
         return await bcrypt.compare(userSubmittedPassword, storedHashedPassword);
@@ -25,3 +19,15 @@ export async function verifyPassword(userSubmittedPassword: string, storedHashed
         return false;
     }
 }
+
+export function verifyToken(token: string) {
+    try {
+        return jwt.verify(token, process.env.JWT_SECRET_KEY);
+    } catch(error) {
+        return false;
+    }
+}
+
+export const generateToken = (name: string) => {
+    return jwt.sign({ name }, process.env.JWT_SECRET_KEY, { expiresIn: '15 days' });
+};

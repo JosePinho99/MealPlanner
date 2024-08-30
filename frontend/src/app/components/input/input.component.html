@@ -4,7 +4,7 @@
       [type]="type"
       [(ngModel)]="model"
       [placeholder]="placeholder ?? ''"
-      (change)="changeMade()"
+      (input)="changeMade()"
 
       [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
 />

@@ -1,35 +1,35 @@
-<select-component 
-  class="field" 
-  [selectedValue]="restriction.element" 
-  [values]="values" 
+<select-component
+  class="field"
+  [selectedValue]="restriction.element"
+  [values]="values"
   [width]="140"
   (select)="changeElement($event)"
   >
 </select-component>
 
-<select-component 
+<select-component
   *ngIf="!isIngredient"
   class="field"
-  [selectedValue]="restriction.operator" 
-  [values]="operators" 
-  [width]="160"
+  [selectedValue]="restriction.operator"
+  [values]="operators"
+  [width]="180"
   (select)="restriction.operator = $event; restriction.value = []"
   >
 </select-component>
 
-<select-component 
+<select-component
   *ngIf="isIngredient"
   class="field"
-  [selectedValue]="restriction.operator" 
+  [selectedValue]="restriction.operator"
   [subSelects]="['more than', 'less than', 'between']"
   [subSelectsValues]="[['more than (daily)', 'more than (weekly)'], ['less than (daily)', 'less than (weekly)'], ['between (daily)', 'between (weekly)']]"
-  [values]="operators" 
-  [width]="160"
+  [values]="operators"
+  [width]="180"
   (select)="changeOperator($event)"
   >
 </select-component>
 
-<!--  Value boxes --> 
+<!--  Value boxes -->
 <ng-container>
   <ng-container *ngIf="restriction.operator === 'more than (weekly)' || restriction.operator === 'less than (weekly)' || restriction.operator === 'more than'|| restriction.operator === 'less than'">
     <input-component [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
@@ -42,9 +42,9 @@
   </ng-container>
 
   <ng-container *ngIf="restriction.operator === 'prioritize' || restriction.operator === 'avoid'">
-    <select-component 
-      class="field" 
-      [selectedValues]="restriction.value" 
+    <select-component
+      class="field"
+      [selectedValues]="restriction.value"
       [values]="days"
       [width]="140"
       [subSelects]="days"
@@ -56,9 +56,9 @@
   </ng-container>
 
   <ng-container *ngIf="restriction.operator === 'combine with' || restriction.operator === 'don\'t combine with'">
-    <select-component 
-      class="field" 
-      [selectedValue]="restriction.value[0]" 
+    <select-component
+      class="field"
+      [selectedValue]="restriction.value[0]"
       [values]="values"
       [width]="140"
       (select)="restriction.value[0] = $event"
