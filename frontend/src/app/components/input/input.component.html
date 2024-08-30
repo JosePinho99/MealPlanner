@@ -2,9 +2,13 @@
       #input
       class="input-container"
       [type]="type"
+      [max]="64"
       [(ngModel)]="model"
       [placeholder]="placeholder ?? ''"
       (input)="changeMade()"
-
+      [ngClass]="{'invalid': !valid}"
       [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
 />
+
+<span *ngIf="!valid" class="error-message">{{errorMessage}}</span>
+

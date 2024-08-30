@@ -36,6 +36,7 @@ export class AppComponent implements OnInit {
   login(credentials: LogCredentials) {
     //TODO Recover password
     //TODO Backend for above things
+    console.log(credentials);
     localStorage.setItem('token', credentials.token);
     this.displayLoginModal = false;
     this.loggedUser = credentials.username;
@@ -47,5 +48,10 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.loadingPage = false
     }, 500);
+  }
+
+  logOut() {
+    this.loggedUser = '';
+    localStorage.removeItem('token');
   }
 }

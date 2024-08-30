@@ -31,3 +31,12 @@ export function verifyToken(token: string) {
 export const generateToken = (name: string) => {
     return jwt.sign({ name }, process.env.JWT_SECRET_KEY, { expiresIn: '15 days' });
 };
+
+export function validateEmail(email: string) {
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return regex.test(email);
+}
+
+export function validateFilled(value: string) {
+    return value !== undefined && value !== null && value !== '';
+}

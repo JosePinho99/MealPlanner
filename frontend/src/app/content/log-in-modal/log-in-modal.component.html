@@ -6,15 +6,14 @@
   <ng-container *ngIf="selectedMode === SignInMode.LOG_IN">
     <h2 class="login-title">Welcome back</h2>
     <span class="extra-info error" *ngIf="errorMessage">{{errorMessage}}</span>
-    <input-component [placeholder]="'Email'" [type]="'text'" [focus]="true"
+    <input-component [placeholder]="'Email'" [type]="'text'" [focus]="true" [validators]="[vRequired, vEmail]"
                      [fontSize]="'0.9rem'"  [width]="250" [height]="26" [model]="logInForm.email" (changes)="logInForm.email = $event"
                      style="margin-top: 30px; margin-bottom: 15px"
     ></input-component>
 
-    <input-component [placeholder]="'Password'"  [type]="'password'" [fontSize]="'0.9rem'"
+    <input-component [placeholder]="'Password'"  [type]="'password'" [fontSize]="'0.9rem'" [validators]="[vRequired, vPassword]"
                      [width]="250" [height]="26" [model]="logInForm.password" (changes)="logInForm.password = $event"
     ></input-component>
-    <span class="link extra-info" (click)="selectedMode = SignInMode.RECOVERY; cleanForms()">Recover password</span>
     <button-component [loading]="loadingSignIn" [fillWidth]="true" style="width: 250px; margin-top: 40px" [size]="'big'" (click)="logIn()">Log in</button-component>
     <button-component [type]="'secondary'" [fillWidth]="true" style="width: 250px; margin-top: 10px" [size]="'big'" (click)="close.emit()">Cancel</button-component>
     <span class="extra-info" style="width: 250px; margin-top: 5px">
@@ -28,59 +27,29 @@
   <ng-container *ngIf="selectedMode === SignInMode.REGISTER">
     <h2 class="login-title">Create account</h2>
     <span class="extra-info error" *ngIf="errorMessage">{{errorMessage}}</span>
-    <input-component [placeholder]="'Email'" [type]="'text'" [focus]="true"
+    <input-component [placeholder]="'Email'" [type]="'text'" [focus]="true" [validators]="[vRequired, vEmail]"
                      [fontSize]="'0.9rem'"  [width]="250" [height]="26" [model]="registerForm.email" (changes)="registerForm.email = $event"
                      style="margin-top: 30px; margin-bottom: 15px"
     ></input-component>
 
     <input-component [placeholder]="'Username'" [type]="'text'" [fontSize]="'0.9rem'"  [width]="250" [height]="26"
-                     [model]="registerForm.username" (changes)="registerForm.username = $event"
+                     [model]="registerForm.username" (changes)="registerForm.username = $event" [validators]="[vRequired]"
                      style="margin-bottom: 15px"
     ></input-component>
 
-    <input-component [placeholder]="'Password'"  [type]="'password'" [fontSize]="'0.9rem'"
+    <input-component [placeholder]="'Password'"  [type]="'password'" [fontSize]="'0.9rem'" [validators]="[vRequired, vPassword]"
                      [width]="250" [height]="26" [model]="registerForm.password" (changes)="registerForm.password = $event"
                      style="margin-bottom: 15px"
     ></input-component>
 
-    <input-component [placeholder]="'Confirm password'"  [type]="'password'" [fontSize]="'0.9rem'"
+    <input-component [placeholder]="'Confirm password'"  [type]="'password'" [fontSize]="'0.9rem'" [validators]="[vRequired, vPassword]"
                      [width]="250" [height]="26" [model]="registerForm.confirmPassword" (changes)="registerForm.confirmPassword = $event"
     ></input-component>
 
     <button-component [loading]="loadingSignIn" [fillWidth]="true" style="width: 250px; margin-top: 40px" [size]="'big'" (click)="register()">Create account</button-component>
     <button-component [type]="'secondary'" [fillWidth]="true" style="width: 250px; margin-top: 10px" [size]="'big'" (click)="close.emit()">Cancel</button-component>
     <span class="extra-info" style="width: 250px; margin-top: 5px">
-      Already have an account<span (click)="SignInMode.LOG_IN" class="link extra-info" style="margin-left: 5px">Log in</span>
+      Already have an account<span (click)="selectedMode = SignInMode.LOG_IN; cleanForms()" class="link extra-info" style="margin-left: 5px">Log in</span>
     </span>
-  </ng-container>
-
-
-
-  <!-- RECOVER PASSWORD -->
-  <ng-container *ngIf="selectedMode === SignInMode.RECOVERY">
-    <h2 class="login-title">Recover password</h2>
-    <span class="extra-info error" *ngIf="errorMessage">{{errorMessage}}</span>
-    <input-component [placeholder]="'Email'" [type]="'text'" [focus]="true"
-                     [fontSize]="'0.9rem'"  [width]="250" [height]="26" [model]="recoverForm.email" (changes)="recoverForm.email = $event"
-                     style="margin-top: 30px; margin-bottom: 15px"
-    ></input-component>
-
-    <input-component *ngIf="recoverForm.emailSent" [placeholder]="'Recovery code'" [type]="'text'"
-                     [fontSize]="'0.9rem'"  [width]="250" [height]="26" [model]="recoverForm.code" (changes)="recoverForm.code = $event"
-                     style="margin-bottom: 15px"
-    ></input-component>
-
-    <input-component *ngIf="recoverForm.emailSent" [placeholder]="'New password'"  [type]="'password'" [fontSize]="'0.9rem'"
-                     [width]="250" [height]="26" [model]="recoverForm.password" (changes)="recoverForm.password = $event"
-    ></input-component>
-
-    <input-component *ngIf="recoverForm.emailSent" [placeholder]="'Confirm password'"  [type]="'password'" [fontSize]="'0.9rem'"
-                     [width]="250" [height]="26" [model]="recoverForm.confirmPassword" (changes)="recoverForm.confirmPassword = $event"
-    ></input-component>
-
-    <button-component [loading]="loadingSignIn" [fillWidth]="true" style="width: 250px; margin-top: 40px" [size]="'big'" (click)="recoverForm.emailSent ? saveNewPassword() : sendRecoveryMail()">
-      {{ recoverForm.emailSent ? 'Save new password' : 'Send recovery email' }}
-    </button-component>
-    <button-component [type]="'secondary'" [fillWidth]="true" style="width: 250px; margin-top: 10px" [size]="'big'" (click)="close.emit()">Cancel</button-component>
   </ng-container>
 </div>

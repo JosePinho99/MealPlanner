@@ -29,18 +29,4 @@ export class LogInService {
       catchError(msg => of({success: false, error: msg.error}))
     );
   }
-
-  sendRecoveryMail(email: string) {
-    return this.http.post<string>("http://localhost:3000/auth/recoveryMail", {email}).pipe(
-      map(token => ({success: true, token})),
-      catchError(msg => of({success: false, error: msg.error}))
-    );
-  }
-
-  changePassword(email: string, password: string) {
-    return this.http.post<string>("http://localhost:3000/auth/changePassword", {email, password}).pipe(
-      map(response => ({success: true, token: response['token'], username: response['username']})),
-      catchError(msg => of({success: false, error: msg.error}))
-    );
-  }
 }

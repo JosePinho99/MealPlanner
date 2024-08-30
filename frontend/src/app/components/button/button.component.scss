@@ -28,7 +28,7 @@
 
 .tertiary-button {
   border: none;
-  color: $blue1;
+  color: $blue4;
   font-weight: bold;
   background: unset;
   transition: background-color 0.2s;
@@ -37,4 +37,24 @@
 .tertiary-button:hover {
   cursor: pointer;
   color: $blue2;
+}
+
+.quaternary-button {
+  border: none;
+  color: $blue1;
+  font-weight: bold;
+  background: unset;
+  transition: background-color 0.2s;
+}
+
+.quaternary-button:hover {
+  cursor: pointer;
+  color: $blue2;
+}
+
+.tertiary-button.active.focus, button.active:focus,
+button.focus, button:active.focus,
+button:active:focus, button:focus {
+  outline: none;
+  box-shadow: none;
 }

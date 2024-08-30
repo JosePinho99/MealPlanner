@@ -1,4 +1,5 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Validator} from "./input.types";
 
 
 @Component({
@@ -16,6 +17,11 @@ export class InputComponent implements AfterViewInit {
   @Input() type: string = 'number';
   @Input() placeholder: string;
   @Input() focus: boolean = false;
+  @Input() validators: Validator[];
+
+  valid: boolean = true;
+  errorMessage: string = '';
+
   @Output() changes = new EventEmitter();
 
   constructor() { }
@@ -27,6 +33,14 @@ export class InputComponent implements AfterViewInit {
   }
 
   changeMade() {
+    this.valid = true;
+    for (let validator of this.validators) {
+      if (!validator.validationFunction(this.model)) {
+        this.valid = false;
+        this.errorMessage = validator.errorMessage;
+        break;
+      }
+    }
     this.changes.emit(this.model);
   }
 }

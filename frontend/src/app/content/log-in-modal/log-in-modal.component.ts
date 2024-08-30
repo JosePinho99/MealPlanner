@@ -4,11 +4,11 @@ import {InputModule} from "../../components/input/input.module";
 import {NgIf, NgStyle} from "@angular/common";
 import {LogCredentials} from "../../types/user";
 import {LogInService} from "../../api/log-in.service";
+import {Validator, validatorEmail, validatorRequired} from "../../components/input/input.types";
 
 enum SignInMode {
   LOG_IN,
-  REGISTER,
-  RECOVERY,
+  REGISTER
 }
 
 @Component({
@@ -22,10 +22,11 @@ export class LogInModalComponent {
   SignInMode = SignInMode;
   selectedMode: SignInMode = SignInMode.LOG_IN;
 
-  logInForm = {email: '', password: ''};
-  registerForm = {email: '', username: '', password: '', confirmPassword: ''};
-  recoverForm = { email: '', emailSent: false, code: '', password: '', confirmPassword: '' };
-
+  logInForm = {email: '', password: '', valid: false};
+  registerForm = {email: '', username: '', password: '', confirmPassword: '', valid: false};
+  vRequired = validatorRequired;
+  vEmail = validatorEmail;
+  vPassword: Validator = {errorMessage: 'Needs to have more than 7 characters', validationFunction: (value) => value.length > 7};
   errorMessage: string = '';
   loadingSignIn: boolean = false;
 
@@ -42,8 +43,6 @@ export class LogInModalComponent {
           return this.logIn();
         case SignInMode.REGISTER:
           return this.register();
-        case SignInMode.RECOVERY:
-          return this.recoverForm.emailSent ? this.saveNewPassword() : this.sendRecoveryMail();
       }
     }
   }
@@ -79,41 +78,9 @@ export class LogInModalComponent {
     });
   }
 
-
-  sendRecoveryMail() {
-    this.loadingSignIn = true;
-    this.logInService.sendRecoveryMail(this.recoverForm.email).subscribe(response => {
-      if (response.success) {
-        this.login.emit({username: this.registerForm.username, token: response['token']});
-      } else {
-        this.errorMessage = response['error'];
-      }
-      this.loadingSignIn = false;
-    });
-  }
-
-
-  saveNewPassword() {
-    if (this.recoverForm.password !== this.recoverForm.confirmPassword) {
-      this.errorMessage = "Passwords do not match";
-      return;
-    }
-    this.loadingSignIn = true;
-    this.logInService.changePassword(this.logInForm.email, this.logInForm.password).subscribe(response => {
-      if (response.success) {
-        this.login.emit({username: response['username'], token: response['token']});
-      } else {
-        this.errorMessage = response['error'];
-      }
-      this.loadingSignIn = false;
-    });
-  }
-
-
   cleanForms() {
-    this.logInForm = {email: '', password: ''};
-    this.registerForm = {email: '', username: '', password: '', confirmPassword: ''};
-    this.recoverForm = { email: '', emailSent: false, code: '', password: '', confirmPassword: '' };
+    this.logInForm = {email: '', password: '', valid: false};
+    this.registerForm = {email: '', username: '', password: '', confirmPassword: '', valid: false};
     this.errorMessage = '';
   }
 }

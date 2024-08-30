@@ -1,5 +1,11 @@
 @import '../../utils/colors.scss';
 
+:host {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
 .input-container {
   border: 1px solid $grey4;
   color: $blue10;
@@ -9,4 +15,18 @@
 
 .input-container:focus {
   box-shadow: inset 0 0 5px $blue3;
+}
+
+.invalid {
+  border-color: $tertiary6;
+}
+
+.invalid:focus {
+  box-shadow: inset 0 0 5px $tertiary3;
+}
+
+
+.error-message {
+  color: $tertiary6;
+  font-size: 0.8rem;
 }

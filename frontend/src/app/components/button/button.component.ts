@@ -3,7 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 export enum ButtonType {
   Main = 'main',
   Secondary = 'secondary',
-  Tertiary = 'tertiary'
+  Tertiary = 'tertiary',
+  Quaternary= 'quaternary'
 }
 
 @Component({
