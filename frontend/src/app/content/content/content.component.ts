@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {GeneratedPlan, Ingredient} from '../../../../../commons/interfaces';
 import {StateService} from "../../state.service";
 
@@ -22,6 +22,8 @@ enum TabType {
   styleUrls: ['./content.component.scss']
 })
 export class ContentComponent implements OnInit {
+  @Input() loggedIn: boolean = false;
+
   TabType = TabType;
   tabs: Tab[] = [
     {name: 'Ingredients', type: TabType.INGREDIENTS},

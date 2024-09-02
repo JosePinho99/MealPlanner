@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Ingredient} from '../../../../../commons/interfaces';
 import { TableColumn } from 'src/app/components/table/table.component';
 import { StateService } from 'src/app/state.service';
@@ -11,17 +11,14 @@ import { HttpClient } from '@angular/common/http';
 })
 export class IngredientsComponent implements OnInit {
 
+  @Input() loggedIn: boolean = false;
   @Output() newIngredientOutput = new EventEmitter;
   @Output() editIngredientOutput = new EventEmitter;
 
   ingredients: Ingredient[] = [];
 
-  tableColumns: TableColumn[] = [
-    {property: 'name', header: 'Name'},
-    {property: 'type', header: 'Type'},
-    {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , ')},
-    {property: '', header: 'Actions'},
-  ];
+  gridTemplateColumns: string;
+  tableColumns: TableColumn[] = [];
 
   constructor(
     private state: StateService,
@@ -31,6 +28,16 @@ export class IngredientsComponent implements OnInit {
     this.state.ingredients.subscribe(ingredients => {
       this.ingredients = ingredients;
     })
+
+    this.tableColumns = [{property: 'name', header: 'Name'},
+      {property: 'type', header: 'Type'},
+      {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , ')},
+      {property: '', header: 'Actions'}
+    ];
+    if (!this.loggedIn) {
+      this.tableColumns.pop();
+    }
+    this.gridTemplateColumns = this.loggedIn ? 'auto calc(33% - 60px) calc(33% - 60px)  120px' : 'auto calc(33%) calc(33%)';
   }
 
   newIngredient() {

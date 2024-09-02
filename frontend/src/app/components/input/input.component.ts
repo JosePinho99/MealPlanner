@@ -17,7 +17,13 @@ export class InputComponent implements AfterViewInit {
   @Input() type: string = 'number';
   @Input() placeholder: string;
   @Input() focus: boolean = false;
+  @Input() onlyInt: boolean = false;
   @Input() validators: Validator[];
+  @Input() set forceValidate(activated: boolean) {
+    if (activated) {
+      this.validate();
+    }
+  };
 
   valid: boolean = true;
   errorMessage: string = '';
@@ -33,6 +39,11 @@ export class InputComponent implements AfterViewInit {
   }
 
   changeMade() {
+    this.validate();
+    this.changes.emit(this.model);
+  }
+
+  validate() {
     this.valid = true;
     for (let validator of this.validators) {
       if (!validator.validationFunction(this.model)) {
@@ -41,6 +52,5 @@ export class InputComponent implements AfterViewInit {
         break;
       }
     }
-    this.changes.emit(this.model);
   }
 }

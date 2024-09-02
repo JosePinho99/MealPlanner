@@ -1,5 +1,5 @@
 export interface Validator {
-  validationFunction: (value: string) => boolean;
+  validationFunction: (value: any) => boolean;
   errorMessage: string
 }
 

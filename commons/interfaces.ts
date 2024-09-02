@@ -2,7 +2,6 @@ export interface Ingredient {
   name: string,
   calories: number,
   price: number,
-  measure?: string,
   referenceValue?: number,
   quantityMinimum?: number
   quantityMaximum?: number,

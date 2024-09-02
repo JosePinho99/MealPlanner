@@ -4,7 +4,7 @@
       <p class="current-plans-title">Current plans</p>
       <button-component class="current-plans-button" [title]="'Add plan'" (click)="newPlan()"></button-component>
     </div>
-    <p class="no-plans">No plans created yet</p>
+    <p class="no-plans">{{loggedIn ? 'No plans created yet' : 'Sign in so you can save new plans and edit the ingredient list'}}</p>
   </div>
 </app-panel>
 
@@ -20,6 +20,7 @@
 
   <app-ingredients
     *ngIf="selectedTab.type === TabType.INGREDIENTS"
+    [loggedIn]="loggedIn"
     class="main-content"
     (newIngredientOutput)="newIngredient()"
     (editIngredientOutput)="editIngredient($event)"

@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
 
   loadingPage: boolean = false;
   displayLoginModal: boolean = false;
-  loggedUser: string;
+  loggedUser: string = null;
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
   }
 
   logOut() {
-    this.loggedUser = '';
+    this.loggedUser = null;
     localStorage.removeItem('token');
     this.getUserData();
   }

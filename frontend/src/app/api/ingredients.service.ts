@@ -11,16 +11,32 @@ export class IngredientsService {
   constructor(private http: HttpClient) {
   }
 
-  //TODO - migrate default ingredients
+  //TODO -
   //       develop toastr for errors
   //       cancel buttons on create and edit
   //       create and edit (when not logged)
   //       create and edit (when logged)
+  //       sort
+  //       search
 
 
   getIngredients() {
     return this.http.get<Ingredient[]>("http://localhost:3000/ingredients", {headers: {'token': localStorage.getItem('token') ?? 'none'}}).pipe(
       catchError(_ => of(null))
+    );
+  }
+
+  createIngredient(ingredient: Ingredient) {
+    return this.http.post("http://localhost:3000/ingredients", ingredient,{headers: {'token': localStorage.getItem('token') ?? 'none'}}).pipe(
+      map(_ => ({success: true})),
+      catchError(msg => of({success: false, error: msg.error}))
+    );
+  }
+
+  editIngredient(ingredient: Ingredient) {
+    return this.http.put("http://localhost:3000/ingredients", ingredient,{headers: {'token': localStorage.getItem('token') ?? 'none'}}).pipe(
+      map(_ => ({success: true})),
+      catchError(msg => of({success: false, error: msg.error}))
     );
   }
 }

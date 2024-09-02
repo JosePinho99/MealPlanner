@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import {getIngredients} from "../controllers/ingredientsController";
+import {createIngredient, getIngredients} from "../controllers/ingredientsController";
 
 export const router = Router();
 
 router.get('/', getIngredients);
+router.post('/', createIngredient);

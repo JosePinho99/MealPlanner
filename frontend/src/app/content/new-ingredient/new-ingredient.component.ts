@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { Ingredient, IngredientType } from '../../../../../commons/interfaces';
 import { StateService } from 'src/app/state.service';
-import { HttpClient } from '@angular/common/http';
+import {Validator, validatorRequired} from "../../components/input/input.types";
+import {IngredientsService} from "../../api/ingredients.service";
 
 @Component({
   selector: 'app-new-ingredient',
@@ -15,9 +16,16 @@ export class NewIngredientComponent implements OnInit, OnChanges {
   @Input() edit: boolean = false;
   @Output() processFinalized = new EventEmitter();
 
+  vRequired = validatorRequired;
+  vNameExists: Validator = {errorMessage: 'Name already exists', validationFunction: (value) => !this.currentIngredients.find(i => i.name === value)};
+  vWrongInterval: Validator = {errorMessage: 'Maximum value needs to be higher than minimum value', validationFunction: (value) => value > this.ingredient.quantityMinimum};
+  loading: boolean = false;
+  formError: string;
+  formActivated: boolean = false;
+
   constructor(
     private state: StateService,
-    private http: HttpClient
+    private ingredientsService: IngredientsService
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +40,6 @@ export class NewIngredientComponent implements OnInit, OnChanges {
         if (!this.state.newIngredient) {
           this.state.newIngredient = {
             name: 'New Ingredient',
-            measure: 'Grams',
             referenceValue: 100,
             quantityMinimum: 50,
             quantityMaximum: 150,
@@ -56,13 +63,28 @@ export class NewIngredientComponent implements OnInit, OnChanges {
   }
 
   save() {
-    if (!this.edit) {
-      this.currentIngredients.push(this.ingredient);
+    this.formActivated = true;
+    if (this.edit) {
+      this.ingredientsService.editIngredient(this.ingredient).subscribe(_ => {
+        this.processFinalized.emit('edit');
+        let cachedIngredient = this.state.editedIngredients.find(i => i.name === this.ingredient.name);
+        this.state.editedIngredients.splice(this.state.editedIngredients.indexOf(cachedIngredient), 1);
+      });
+    } else {
+      if (this.currentIngredients.find(i => i.name === this.ingredient.name)) {
+        this.formError = "Incorrect fields";
+        return;
+      }
+      this.loading = true;
+      this.ingredientsService.createIngredient(this.ingredient).subscribe(response => {
+        if (response.success) {
+          this.state.newIngredient = null;
+          this.processFinalized.emit('new');
+        } else {
+          this.formError = response['error'];
+        }
+        this.loading = false;
+      });
     }
-    this.http.post('http://127.0.0.1:8000/updateIngredients/', this.currentIngredients).subscribe(_ => {
-      this.state.newIngredient = null;
-      this.processFinalized.emit(this.edit ? 'edit' : 'new');
-    });
   }
-
 }
