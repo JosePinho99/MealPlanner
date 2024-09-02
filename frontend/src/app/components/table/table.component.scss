@@ -7,16 +7,18 @@
 }
 
 .table-header {
-  display: flex;
+  display: grid;
   border-top: 2px solid $blue5;
   background: $blue2;
   border-bottom: 1px solid $blue5;
 }
 
+.table-body {
+  overflow: auto;
+}
+
 .table-th {
-  padding: 5px;
-  padding-left: 15px;
-  width: 300px;
+  padding: 5px 5px 5px 15px;
   color: $grey9;
   font-weight: bold;
   border-right: 1px solid $grey4;
@@ -32,7 +34,7 @@
 }
 
 .table-tr {
-  display: flex;
+  display: grid;
 }
 
 .odd-row {
@@ -41,9 +43,7 @@
 
 
 .table-td {
-  padding: 5px;
-  padding-left: 15px;
-  width: 300px;
+  padding: 5px 5px 5px 15px;
   border-right: 1px solid $grey3;
 }
 

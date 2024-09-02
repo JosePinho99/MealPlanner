@@ -28,8 +28,8 @@ export function verifyToken(token: string) {
     }
 }
 
-export const generateToken = (name: string) => {
-    return jwt.sign({ name }, process.env.JWT_SECRET_KEY, { expiresIn: '15 days' });
+export const generateToken = (name: string, email: string) => {
+    return jwt.sign({ name, email }, process.env.JWT_SECRET_KEY, { expiresIn: '15 days' });
 };
 
 export function validateEmail(email: string) {

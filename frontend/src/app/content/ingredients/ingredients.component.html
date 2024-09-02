@@ -4,10 +4,11 @@
 </div>
 
 <div class="table">
-  <table-component 
-    [ngStyle]="{'min-width': '660px'}" 
-    [tableColumns]="tableColumns" 
+  <table-component
+    [ngStyle]="{'min-width': '500px'}"
+    [tableColumns]="tableColumns"
     [data]="ingredients"
+    [gridTemplateColumns]="'auto calc(33% - 60px) calc(33% - 60px)  120px'"
     (edit)="editIngredient($event)"
     (delete)="deleteIngredient($event)"
   >

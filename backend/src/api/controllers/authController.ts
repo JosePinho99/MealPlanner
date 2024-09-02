@@ -8,8 +8,6 @@ import {
     verifyToken
 } from "../../utils/authenticationUtils";
 import * as AuthService from '../../services/authService';
-import nodemailer from 'nodemailer';
-
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -25,7 +23,7 @@ export const login = async (req: Request, res: Response) => {
         if (!isPasswordCorrect) {
             return res.status(401).json("Incorrect password");
         }
-        const token = generateToken(user['name']);
+        const token = generateToken(user['name'], user['email']);
         res.status(200).json({ token, username: user['name'] });
     } catch (error) {
         console.error(error);
@@ -49,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
         if (!registerSuccess) {
             return res.status(500).json("Unknown error");
         }
-        const token = generateToken(username);
+        const token = generateToken(username, email);
         return res.status(200).json(token);
     } catch (error) {
         console.error(error);
@@ -63,7 +61,7 @@ export const verifySession = async (req: Request, res: Response) => {
         const {token} = req.body;
         const user= verifyToken(token)
         if (user) {
-            res.status(200).json(user['name']);
+            res.status(200).json(user["name"]);
         } else {
             res.status(401).json("Not Authorized");
         }
@@ -71,34 +69,3 @@ export const verifySession = async (req: Request, res: Response) => {
         res.status(500).json("Unknown error");
     }
 }
-
-export const recoverPassword = async (req: Request, res: Response) => {
-    try {
-        const { email } = req.body;
-        if (!validateEmail(email) || !validateFilled(email)) {
-            return res.status(400).json("Incorrect fields");
-        }
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
-            auth: {
-                user: 'josepinho262@gmail.com',
-                pass: 'Kaxinas99!!'
-            }
-        });
-        let info = await transporter.sendMail({
-            from: 'josepinho262@gmail.com',
-            to: email,
-            subject: "Hello ✔",
-            text: "Hello world?",
-            html: "<b>Hello world?</b>"
-        });
-        console.log("Message sent: %s", info.messageId);
-        res.status(200).json(info.messageId);
-    } catch (error) {
-        console.log(error);
-        res.status(500).json("Unknown error");
-    }
-}
-

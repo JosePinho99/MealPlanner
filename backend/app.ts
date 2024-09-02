@@ -3,7 +3,7 @@ import cors from 'cors';
 import {GeneratedPlan, PlannedDay} from "../commons/interfaces";
 import {generatePlan} from "./core/planner";
 import {router as authRouter} from "./src/api/routes/authRoutes";
-
+import {router as ingredientsRouter} from "./src/api/routes/ingredientsRoutes";
 
 const app = express();
 const port = 3000;
@@ -14,6 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/auth', authRouter);
+app.use('/ingredients', ingredientsRouter);
 
 
 

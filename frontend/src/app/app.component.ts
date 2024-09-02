@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { StateService } from './state.service';
 import {LogCredentials} from "./types/user";
 import {LogInService} from "./api/log-in.service";
+import {IngredientsService} from "./api/ingredients.service";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import {LogInService} from "./api/log-in.service";
 export class AppComponent implements OnInit {
   constructor(
     private state: StateService,
-    private logInService: LogInService
+    private logInService: LogInService,
+    private ingredientsService: IngredientsService
   ) { }
 
   loadingPage: boolean = false;
@@ -25,33 +27,36 @@ export class AppComponent implements OnInit {
         if (response.success) {
           this.loggedUser = response['username'];
         }
-        this.loadingPage = false;
+        this.getUserData();
       });
+    } else {
+      this.getUserData();
     }
-    this.state.setIngredients();
   }
 
-
-
   login(credentials: LogCredentials) {
-    //TODO Recover password
-    //TODO Backend for above things
-    console.log(credentials);
     localStorage.setItem('token', credentials.token);
     this.displayLoginModal = false;
     this.loggedUser = credentials.username;
-  }
-
-
-  getUserData() {
-    this.loadingPage = true;
-    setTimeout(() => {
-      this.loadingPage = false
-    }, 500);
+    this.getUserData();
   }
 
   logOut() {
     this.loggedUser = '';
     localStorage.removeItem('token');
+    this.getUserData();
+  }
+
+
+
+  getUserData() {
+    this.loadingPage = true;
+    this.ingredientsService.getIngredients().subscribe(ingredients => {
+      if (ingredients) {
+        this.state.setIngredients(ingredients);
+        this.loadingPage = false;
+      }
+      //TODO deal with error other than infinite loading (toastr?)
+    });
   }
 }

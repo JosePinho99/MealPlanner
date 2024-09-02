@@ -1,13 +1,13 @@
-<div class="table-header">
+<div class="table-header" [ngStyle]="{'grid-template-columns': gridTemplateColumns}">
   <div *ngFor="let column of tableColumns; let j = index" class="table-th" [ngClass]="{'first-cell-th': j === 0}">
     {{column.header}}
   </div>
 </div>
 
 <div class="table-body">
-  <div *ngFor="let row of data; let i = index" class="table-tr" [ngClass]="{'odd-row': i % 2 !== 0}">
+  <div *ngFor="let row of data; let i = index" class="table-tr" [ngStyle]="{'grid-template-columns': gridTemplateColumns}" [ngClass]="{'odd-row': i % 2 !== 0}">
     <div *ngFor="let column of tableColumns; let j = index" class="table-td" [ngClass]="{'first-cell-td': j === 0}">
-      {{row[column.property]}}
+      {{column?.value ? column.value(row) : row[column.property]}}
       <i *ngIf="column.header === 'Actions'" class="fa-solid fa-pen-to-square table-icon" (click)="editClicked(row)"></i>
       <i *ngIf="column.header === 'Actions'" class="fa-solid fa-trash table-icon" (click)="deleteClicked(row)"></i>
     </div>

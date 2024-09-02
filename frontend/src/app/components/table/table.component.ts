@@ -2,7 +2,8 @@ import { Component, Input, EventEmitter, OnInit, Output } from '@angular/core';
 
 export interface TableColumn {
   property: string,
-  header: string
+  header: string,
+  value?: (row: any) => string,
 }
 
 @Component({
@@ -13,6 +14,7 @@ export interface TableColumn {
 export class TableComponent implements OnInit {
   @Input() tableColumns: TableColumn[] = [];
   @Input() data: any[] = [];
+  @Input() gridTemplateColumns: string;
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
 

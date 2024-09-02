@@ -18,9 +18,8 @@ export class IngredientsComponent implements OnInit {
 
   tableColumns: TableColumn[] = [
     {property: 'name', header: 'Name'},
-    {property: 'price', header: 'Price'},
-    {property: 'calories', header: 'Calories'},
-    {property: 'proteins', header: 'Proteins'},
+    {property: 'type', header: 'Type'},
+    {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , ')},
     {property: '', header: 'Actions'},
   ];
 
@@ -44,7 +43,7 @@ export class IngredientsComponent implements OnInit {
 
   deleteIngredient(ingredient: Ingredient) {
     let index = this.ingredients.indexOf(ingredient);
-    this.ingredients.splice(index, 1); 
+    this.ingredients.splice(index, 1);
     this.http.post('http://127.0.0.1:8000/updateIngredients/', this.ingredients).subscribe(_ => {
       this.state.newIngredient = null;
     });

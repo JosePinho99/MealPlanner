@@ -1,17 +1,14 @@
 :host {
-  flex-direction: column;
-  align-items: center;
+  padding: 0 50px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  width: 85%;
   margin-top: 30px;
 }
 
 .table {
-  width: 85%;
   margin-top: 30px;
   overflow: auto;
 }

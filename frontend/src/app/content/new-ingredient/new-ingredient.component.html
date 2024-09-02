@@ -7,7 +7,7 @@
     <div class="group-content">
       <div class="block">
         <p class="block-label">Name</p>
-        <input-component [type]="'text'" [model]="ingredient.name" (changes)="ingredient.name = $event"></input-component> 
+        <input-component [type]="'text'" [model]="ingredient.name" (changes)="ingredient.name = $event"></input-component>
       </div>
 
       <div class="block">
@@ -21,12 +21,12 @@
       <div class="block">
         <p class="block-label">Quantites allowed</p>
         <div>
-          <div>
+          <div style="display: flex">
             <span class="span-helper" [ngStyle]="{'margin-left': '0px', 'margin-right': '7px'}">Minimum</span>
             <input-component [model]="ingredient.quantityMinimum" (changes)="ingredient.quantityMinimum = $event"></input-component>
             <span [ngStyle]="{'margin-left': '5px', 'margin-right': '50px'}" class="span-helper">{{'units'}}</span>
           </div>
-          <div [ngStyle]="{'margin-top': '5px'}">
+          <div [ngStyle]="{'margin-top': '5px', 'display': 'flex'}">
             <span class="span-helper" [ngStyle]="{'margin-left': '0px'}">Maximum</span>
             <input-component [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
             <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'units'}}</span>
@@ -46,7 +46,7 @@
       <div class="block">
         <p class="block-label">Allowed meals</p>
         <div class="type-radio-group">
-          <select-component 
+          <select-component
             [width]="140"
             [selectedValues]="ingredient.allowedMeals"
             (select)="ingredient.allowedMeals = $event"
@@ -55,22 +55,22 @@
           ></select-component>
         </div>
       </div>
-    
+
       <div class="block">
         <p class="block-label">Price</p>
-        <input-component [model]="ingredient.price" (changes)="ingredient.price = $event"></input-component> 
+        <input-component [model]="ingredient.price" (changes)="ingredient.price = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
 
       <div class="block">
         <p class="block-label">Calories</p>
-        <input-component [model]="ingredient.calories" (changes)="ingredient.calories = $event"></input-component> 
+        <input-component [model]="ingredient.calories" (changes)="ingredient.calories = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
-    
+
       <div class="block">
         <p class="block-label">Proteins</p>
-        <input-component [model]="ingredient.proteins" (changes)="ingredient.proteins = $event"></input-component> 
+        <input-component [model]="ingredient.proteins" (changes)="ingredient.proteins = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
     </div>
