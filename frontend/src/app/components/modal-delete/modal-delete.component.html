@@ -1,0 +1,7 @@
+<div class="content">
+  {{ message }}
+  <div style="display:flex" class="button-line">
+    <button-component  [type]="'secondary'" [size]="'big'" (click)="cancel.emit()">Cancel</button-component>
+    <button-component [loading]="loading" style="margin-left: 5px" [size]="'big'" (click)="confirm()">Delete</button-component>
+  </div>
+</div>

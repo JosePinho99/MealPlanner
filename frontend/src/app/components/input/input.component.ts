@@ -9,7 +9,7 @@ import {Validator} from "./input.types";
 })
 export class InputComponent implements AfterViewInit {
   @ViewChild('input') inputElement: ElementRef;
-  @Input() width: number = 150;
+  @Input() width: number = 150;1
   @Input() height: number = 23;
   @Input() paddingLeft: number = 5;
   @Input() fontSize: string = '1rem';

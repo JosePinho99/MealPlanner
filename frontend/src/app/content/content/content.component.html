@@ -21,9 +21,11 @@
   <app-ingredients
     *ngIf="selectedTab.type === TabType.INGREDIENTS"
     [loggedIn]="loggedIn"
+    [loading]="loadingIngredients"
     class="main-content"
     (newIngredientOutput)="newIngredient()"
     (editIngredientOutput)="editIngredient($event)"
+    (update)="updateIngredients()"
   >
   </app-ingredients>
 

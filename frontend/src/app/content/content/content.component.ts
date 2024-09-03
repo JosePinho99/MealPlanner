@@ -1,6 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {GeneratedPlan, Ingredient} from '../../../../../commons/interfaces';
 import {StateService} from "../../state.service";
+import {IngredientsService} from "../../api/ingredients.service";
 
 interface Tab {
   name: string,
@@ -24,6 +25,7 @@ enum TabType {
 export class ContentComponent implements OnInit {
   @Input() loggedIn: boolean = false;
 
+  loadingIngredients: boolean = false;
   TabType = TabType;
   tabs: Tab[] = [
     {name: 'Ingredients', type: TabType.INGREDIENTS},
@@ -32,7 +34,10 @@ export class ContentComponent implements OnInit {
   selectedTab: Tab = this.tabs[0];
   currentIngredients: Ingredient[];
 
-  constructor(private state: StateService,) { }
+  constructor(
+    private state: StateService,
+    private ingredientsService: IngredientsService
+  ) { }
 
   ngOnInit(): void {
     this.state.ingredients.subscribe(ingredients => {
@@ -72,15 +77,23 @@ export class ContentComponent implements OnInit {
   }
 
   endedAddingEditingIngredient(action: string) {
-    //   this.selectedTab = {name: 'Ingredients', type: TabType.INGREDIENTS};
-    //   let index = 0
-    //   if (action === 'edit') {
-    //     index = this.tabs.indexOf({Tab.EDIT_INGREDIENT});
-    //   } else {
-    //     index = this.tabs.indexOf(Tab.NEW_INGREDIENT);
-    //   }
-    //   this.tabs.splice(index, 1);
-    // }
+    const index = this.tabs.indexOf(this.selectedTab);
+    this.tabs.splice(index, 1);
+    this.selectedTab = this.tabs[0];
+    if (action !== "cancel") {
+      this.updateIngredients();
+    }
+  }
+
+  updateIngredients() {
+    this.loadingIngredients = true;
+    this.ingredientsService.getIngredients().subscribe(ingredients => {
+      if (ingredients) {
+        this.state.setIngredients(ingredients);
+        this.loadingIngredients = false;
+      }
+      //TODO deal with error other than infinite loading (toastr?)
+    });
   }
 
   generatedPlan(plan: GeneratedPlan) {

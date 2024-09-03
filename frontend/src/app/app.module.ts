@@ -19,6 +19,7 @@ import { GeneratedPlanComponent } from './content/generated-plan/generated-plan.
 import {ModalComponent} from "./components/modal/modal.component";
 import {LoadingComponent} from "./components/loading/loading.component";
 import {LogInModalComponent} from "./content/log-in-modal/log-in-modal.component";
+import {ModalDeleteComponent} from "./components/modal-delete/modal-delete.component";
 
 @NgModule({ declarations: [
         AppComponent,
@@ -37,5 +38,5 @@ import {LogInModalComponent} from "./content/log-in-modal/log-in-modal.component
         SearchModule,
         SelectModule,
         InputModule,
-        FormsModule, ModalComponent, LoadingComponent, LogInModalComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        FormsModule, ModalComponent, LoadingComponent, LogInModalComponent, ModalDeleteComponent], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule { }

@@ -18,7 +18,6 @@ export class NewIngredientComponent implements OnInit, OnChanges {
 
   vRequired = validatorRequired;
   vNameExists: Validator = {errorMessage: 'Name already exists', validationFunction: (value) => !this.currentIngredients.find(i => i.name === value)};
-  vWrongInterval: Validator = {errorMessage: 'Maximum value needs to be higher than minimum value', validationFunction: (value) => value > this.ingredient.quantityMinimum};
   loading: boolean = false;
   formError: string;
   formActivated: boolean = false;
@@ -64,27 +63,33 @@ export class NewIngredientComponent implements OnInit, OnChanges {
 
   save() {
     this.formActivated = true;
-    if (this.edit) {
-      this.ingredientsService.editIngredient(this.ingredient).subscribe(_ => {
-        this.processFinalized.emit('edit');
-        let cachedIngredient = this.state.editedIngredients.find(i => i.name === this.ingredient.name);
-        this.state.editedIngredients.splice(this.state.editedIngredients.indexOf(cachedIngredient), 1);
-      });
-    } else {
-      if (this.currentIngredients.find(i => i.name === this.ingredient.name)) {
-        this.formError = "Incorrect fields";
-        return;
-      }
-      this.loading = true;
-      this.ingredientsService.createIngredient(this.ingredient).subscribe(response => {
-        if (response.success) {
-          this.state.newIngredient = null;
-          this.processFinalized.emit('new');
-        } else {
-          this.formError = response['error'];
-        }
-        this.loading = false;
-      });
+    if (!this.edit && this.currentIngredients.find(i => i.name === this.ingredient.name)) {
+      this.formError = "Incorrect fields";
+      return;
     }
+
+    const request = this.edit ?
+      this.ingredientsService.editIngredient(this.ingredient) :
+      this.ingredientsService.createIngredient(this.ingredient);
+
+    this.loading = true;
+    request.subscribe(response => {
+      if (response.success) {
+        if (this.edit) {
+          let cachedIngredient = this.state.editedIngredients.find(i => i.name === this.ingredient.name);
+          this.state.editedIngredients.splice(this.state.editedIngredients.indexOf(cachedIngredient), 1);
+        } else {
+          this.state.newIngredient = null;
+        }
+        this.processFinalized.emit(this.edit ? 'edit' : 'new');
+      } else {
+        this.formError = response['error'];
+      }
+      this.loading = false;
+    });
+  }
+
+  cancel() {
+    this.processFinalized.emit('cancel');
   }
 }

@@ -7,10 +7,18 @@
   <table-component
     [ngStyle]="{'min-width': '500px'}"
     [tableColumns]="tableColumns"
+    [loading]="loading"
     [data]="ingredients"
     [gridTemplateColumns]="gridTemplateColumns"
     (edit)="editIngredient($event)"
-    (delete)="deleteIngredient($event)"
+    (delete)="selectedDeleteIngredient = $event"
   >
 </table-component>
 </div>
+
+
+<modal-component *ngIf="selectedDeleteIngredient">
+  <modal-delete-component [message]="'Are you sure you want to delete the ingredient ' + selectedDeleteIngredient.name + ' ?'"
+                          (cancel)="selectedDeleteIngredient = null" (delete)="deleteIngredient()">
+  </modal-delete-component>
+</modal-component>

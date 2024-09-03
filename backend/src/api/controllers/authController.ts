@@ -8,6 +8,7 @@ import {
     verifyToken
 } from "../../utils/authenticationUtils";
 import * as AuthService from '../../services/authService';
+import * as IngredientsService from '../../services/ingredientsService';
 
 export const login = async (req: Request, res: Response) => {
     try {
@@ -34,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
     try {
-        const { email, username, password } = req.body;
+        const {email, username, password} = req.body;
         if (!validateEmail(email) || !validateFilled(email) || !validateFilled(username) || !validateFilled(password) || password.length < 8) {
             return res.status(400).json("Incorrect fields");
         }
@@ -48,6 +49,7 @@ export const register = async (req: Request, res: Response) => {
             return res.status(500).json("Unknown error");
         }
         const token = generateToken(username, email);
+        await IngredientsService.fillDefaultIngredients(email);
         return res.status(200).json(token);
     } catch (error) {
         console.error(error);

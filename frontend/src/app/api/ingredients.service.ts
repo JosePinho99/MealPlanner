@@ -39,4 +39,11 @@ export class IngredientsService {
       catchError(msg => of({success: false, error: msg.error}))
     );
   }
+
+  deleteIngredient(name: string) {
+    return this.http.delete("http://localhost:3000/ingredients/" + name, {headers: {'token': localStorage.getItem('token') ?? 'none'}}).pipe(
+      map(_ => ({success: true})),
+      catchError(msg => of({success: false, error: msg.error}))
+    );
+  }
 }

@@ -3,6 +3,7 @@ import { Ingredient} from '../../../../../commons/interfaces';
 import { TableColumn } from 'src/app/components/table/table.component';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
+import {IngredientsService} from "../../api/ingredients.service";
 
 @Component({
   selector: 'app-ingredients',
@@ -12,17 +13,21 @@ import { HttpClient } from '@angular/common/http';
 export class IngredientsComponent implements OnInit {
 
   @Input() loggedIn: boolean = false;
+  @Input() loading: boolean = false;
   @Output() newIngredientOutput = new EventEmitter;
   @Output() editIngredientOutput = new EventEmitter;
+  @Output() update = new EventEmitter;
 
   ingredients: Ingredient[] = [];
 
   gridTemplateColumns: string;
   tableColumns: TableColumn[] = [];
+  selectedDeleteIngredient: Ingredient = null;
 
   constructor(
     private state: StateService,
-    private http: HttpClient) { }
+    private ingredientsService: IngredientsService
+  ) { }
 
   ngOnInit(): void {
     this.state.ingredients.subscribe(ingredients => {
@@ -48,11 +53,10 @@ export class IngredientsComponent implements OnInit {
     this.editIngredientOutput.emit(ingredient);
   }
 
-  deleteIngredient(ingredient: Ingredient) {
-    let index = this.ingredients.indexOf(ingredient);
-    this.ingredients.splice(index, 1);
-    this.http.post('http://127.0.0.1:8000/updateIngredients/', this.ingredients).subscribe(_ => {
-      this.state.newIngredient = null;
+  deleteIngredient() {
+    this.ingredientsService.deleteIngredient(this.selectedDeleteIngredient.name).subscribe(response => {
+      this.update.emit();
+      this.selectedDeleteIngredient = null;
     });
   }
 }

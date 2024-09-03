@@ -14,6 +14,7 @@ export interface TableColumn {
 export class TableComponent implements OnInit {
   @Input() tableColumns: TableColumn[] = [];
   @Input() data: any[] = [];
+  @Input() loading: boolean = false;
   @Input() gridTemplateColumns: string;
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();

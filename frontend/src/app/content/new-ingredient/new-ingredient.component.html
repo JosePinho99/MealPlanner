@@ -3,11 +3,12 @@
 
   <div class="group">
     <p class="group-header">{{edit ? 'Edit ingredient' : 'New ingredient'}}</p>
-    <span *ngIf="formError" class="error-message">{{ formError }}</span>
+    <span *ngIf="formError" class="error-message" style="position: absolute">{{ formError }}</span>
     <div class="group-content">
       <div class="block">
         <p class="block-label">Name</p>
-        <input-component [forceValidate]="formActivated" [validators]="[vRequired, vNameExists]" [type]="'text'" [model]="ingredient.name" (changes)="ingredient.name = $event"></input-component>
+        <p *ngIf="edit" class="block-value">{{ingredient.name}}</p>
+        <input-component *ngIf="!edit" [forceValidate]="formActivated" [validators]="[vRequired, vNameExists]" [type]="'text'" [model]="ingredient.name" (changes)="ingredient.name = $event"></input-component>
       </div>
 
       <div class="block">
@@ -28,12 +29,12 @@
           </div>
           <div [ngStyle]="{'margin-top': '5px', 'display': 'flex'}">
             <span class="span-helper" [ngStyle]="{'margin-left': '0px'}">Maximum</span>
-            <input-component [forceValidate]="formActivated" [validators]="[vRequired, vWrongInterval]" [onlyInt]="true" [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
+            <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [onlyInt]="true" [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
             <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'units'}}</span>
           </div>
         </div>
       </div>
-      <span *ngIf="ingredient.quantityMinimum >= ingredient.quantityMaximum" class="error-message">Maximum value needs to be higher than minimum value</span>
+      <span *ngIf="ingredient.quantityMinimum > ingredient.quantityMaximum" class="error-message">Maximum value needs to be higher than minimum value</span>
 
 
       <div class="block">
@@ -81,6 +82,6 @@
 
 
 <div class="buttons">
-  <button-component [size]="'big'" [type]="'secondary'" [title]="'Cancel'"></button-component>
+  <button-component [size]="'big'" [type]="'secondary'" [title]="'Cancel'" (click)="cancel()"></button-component>
   <button-component [loading]="loading" (click)="save()" [size]="'big'" [title]="'Save'" [ngStyle]="{'margin-left': '5px'}"></button-component>
 </div>

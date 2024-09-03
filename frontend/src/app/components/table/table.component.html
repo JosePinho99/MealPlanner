@@ -5,11 +5,16 @@
 </div>
 
 <div class="table-body">
-  <div *ngFor="let row of data; let i = index" class="table-tr" [ngStyle]="{'grid-template-columns': gridTemplateColumns}" [ngClass]="{'odd-row': i % 2 !== 0}">
-    <div *ngFor="let column of tableColumns; let j = index" class="table-td" [ngClass]="{'first-cell-td': j === 0}">
-      {{column?.value ? column.value(row) : row[column.property]}}
-      <i *ngIf="column.header === 'Actions'" class="fa-solid fa-pen-to-square table-icon" (click)="editClicked(row)"></i>
-      <i *ngIf="column.header === 'Actions'" class="fa-solid fa-trash table-icon" (click)="deleteClicked(row)"></i>
+  <ng-container *ngIf="!loading">
+    <div *ngFor="let row of data; let i = index" class="table-tr" [ngStyle]="{'grid-template-columns': gridTemplateColumns}" [ngClass]="{'odd-row': i % 2 !== 0}">
+      <div *ngFor="let column of tableColumns; let j = index" class="table-td" [ngClass]="{'first-cell-td': j === 0}">
+        {{column?.value ? column.value(row) : row[column.property]}}
+        <i *ngIf="column.header === 'Actions'" class="fa-solid fa-pen-to-square table-icon" (click)="editClicked(row)"></i>
+        <i *ngIf="column.header === 'Actions'" class="fa-solid fa-trash table-icon" (click)="deleteClicked(row)"></i>
+      </div>
     </div>
-  </div>
+  </ng-container>
+
+  <loading-component *ngIf="loading" [top]="'30px'"></loading-component>
+
 </div>
