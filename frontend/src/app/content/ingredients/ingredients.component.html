@@ -1,5 +1,5 @@
 <div class="header">
-  <search-component></search-component>
+  <search-component (changes)="filter($event)"></search-component>
   <button-component *ngIf="loggedIn" [title]="'Add ingredient'" (click)="newIngredient()"></button-component>
 </div>
 
@@ -8,7 +8,7 @@
     [ngStyle]="{'min-width': '500px'}"
     [tableColumns]="tableColumns"
     [loading]="loading"
-    [data]="ingredients"
+    [data]="filteredIngredients"
     [gridTemplateColumns]="gridTemplateColumns"
     (edit)="editIngredient($event)"
     (delete)="selectedDeleteIngredient = $event"

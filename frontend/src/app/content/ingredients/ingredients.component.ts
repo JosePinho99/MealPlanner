@@ -4,6 +4,7 @@ import { TableColumn } from 'src/app/components/table/table.component';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
 import {IngredientsService} from "../../api/ingredients.service";
+import {filter} from "rxjs";
 
 @Component({
   selector: 'app-ingredients',
@@ -19,6 +20,7 @@ export class IngredientsComponent implements OnInit {
   @Output() update = new EventEmitter;
 
   ingredients: Ingredient[] = [];
+  filteredIngredients: Ingredient[] = [];
 
   gridTemplateColumns: string;
   tableColumns: TableColumn[] = [];
@@ -32,8 +34,8 @@ export class IngredientsComponent implements OnInit {
   ngOnInit(): void {
     this.state.ingredients.subscribe(ingredients => {
       this.ingredients = ingredients;
+      this.filter("");
     })
-
     this.tableColumns = [{property: 'name', header: 'Name'},
       {property: 'type', header: 'Type'},
       {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , ')},
@@ -58,5 +60,9 @@ export class IngredientsComponent implements OnInit {
       this.update.emit();
       this.selectedDeleteIngredient = null;
     });
+  }
+
+  filter(filterString: string) {
+    this.filteredIngredients = this.ingredients.filter(ing => ing.name.toUpperCase().includes(filterString.toUpperCase()));
   }
 }

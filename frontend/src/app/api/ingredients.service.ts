@@ -13,9 +13,6 @@ export class IngredientsService {
 
   //TODO -
   //       develop toastr for errors
-  //       cancel buttons on create and edit
-  //       create and edit (when not logged)
-  //       create and edit (when logged)
   //       sort
   //       search
 
