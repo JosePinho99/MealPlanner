@@ -31,7 +31,7 @@ export function defaultNewPlan() {
       // {element: 'Bacon', operator: Operator.MoreThanWeekly, value: ['0']},
       // {element: 'Compal', operator: Operator.MoreThanWeekly, value: ['0']},
       // {element: 'Shots proteina', operator: Operator.LessThanWeekly, value: ['4']},
-      {element: 'All', operator: Operator.LessThanWeekly, value: ['4']},
+      {element: 'All', operator: Operator.LessThanWeekly, value: ['10']},
       {element: 'All', operator: Operator.MoreThanWeekly, value: ['1']},
       {element: 'All', operator: Operator.DontRepeatInARow}
     ],

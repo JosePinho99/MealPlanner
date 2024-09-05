@@ -1,1 +1,36 @@
-<pre>{{teste}}</pre>
+<!--<pre>{{teste}}</pre>-->
+
+<div class="first-column">
+  <div class="errors-warning table-header" *ngIf="plan.errors.length > 0 && plan.errors.length < 5">{{plan.errors.length}} conditions not met</div>
+  <div class="errors-danger table-header" *ngIf="plan.errors.length > 4">{{plan.errors.length}} conditions not met</div>
+  <div class="errors-success table-header" *ngIf="plan.errors.length === 0"><i class="fa-solid fa-thumbs-up"></i>Every condition was met</div>
+
+  <div class="week-day">Monday</div>
+  <div class="week-day">Tuesday</div>
+  <div class="week-day">Wednesday</div>
+  <div class="week-day">Thursday</div>
+  <div class="week-day">Friday</div>
+  <div class="week-day">Saturday</div>
+  <div class="week-day">Sunday</div>
+</div>
+
+<div *ngFor="let meal of mealList" style="flex-grow: 1" class="normal-column">
+  <div class="table-header" style="font-weight: bold">{{ meal }}</div>
+
+  <div class="day-summary" *ngFor="let day of ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']">
+    <div *ngFor="let ing of getIngredientsForDayAndMeal(day, meal)" class="ingredient" style="display: flex">
+      <div class="ingredient-quantity">{{'(' + ing.quantity + ' units)'}}</div>
+      <div class="ingredient-name">{{ing.name}}</div>
+    </div>
+  </div>
+</div>
+
+
+<div style="flex-grow: 1">
+  <div class="table-header" style="font-weight: bold">Total </div>
+  <div class="day-summary" *ngFor="let day of ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']">
+    <div style="margin-bottom: 5px"><span class="label">Calories:</span><span style="width: 35px; display: inline-block; text-align: start">{{getNutrientsByDay(day, 'calories', 0)}}</span></div>
+    <div><span class="label">Proteins:</span><span style="width: 35px; display: inline-block; text-align: start">{{getNutrientsByDay(day, 'proteins', 2)}}</span></div>
+  </div>
+</div>
+

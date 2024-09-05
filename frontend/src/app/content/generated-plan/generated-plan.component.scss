@@ -1,3 +1,6 @@
+@import '../../utils/colors.scss';
+
+
 pre {
   background-color: #f4f4f4;
   padding: 10px;
@@ -6,4 +9,80 @@ pre {
   white-space: pre-wrap; /* This ensures that the text breaks and wraps */
   word-wrap: break-word;  /* This prevents long strings from breaking the layout */
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+:host {
+  display: flex;
+  flex-direction: row !important;
+  padding: 50px;
+}
+
+.first-column {
+  width: 240px;
+}
+
+.errors-warning {
+  background: $secondary2;
+  color: $secondary9;
+  padding: 0 5px;
+}
+
+.errors-success {
+  background: $blue2;
+  color: $blue9;
+  padding: 0 5px;
+}
+
+.errors-danger {
+  background: $tertiary2;
+  color: $tertiary9;
+  padding: 0 5px;
+}
+
+.week-day {
+  height: 100px;
+  border-bottom: 1px solid #dadada;
+  align-content: center;
+  padding-left: 25px;
+  font-weight: bold;
+}
+
+.table-header {
+  height: 40px;
+  text-align: center;
+  align-content: center;
+  text-transform: capitalize;
+}
+
+.day-summary {
+  height: 100px;
+  border-bottom: 1px solid #dadada;
+  padding: 0 10px;
+  text-align: center;
+  align-content: center;
+}
+
+.label {
+  color: $blue6;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.ingredient {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.ingredient-quantity {
+  width: 50%;
+  text-align: end;
+  font-size: 0.7rem;
+  color: $blue6;
+  margin-right: 10px;
+}
+
+.ingredient-name {
+  flex-grow: 1;
+  text-align: start;
 }
