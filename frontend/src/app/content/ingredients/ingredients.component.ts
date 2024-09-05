@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Ingredient} from '../../../../../commons/interfaces';
-import { TableColumn } from 'src/app/components/table/table.component';
+import {STRING_SORT_FUNCTION, TableColumn} from 'src/app/components/table/table.component';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
 import {IngredientsService} from "../../api/ingredients.service";
@@ -36,9 +36,9 @@ export class IngredientsComponent implements OnInit {
       this.ingredients = ingredients;
       this.filter("");
     })
-    this.tableColumns = [{property: 'name', header: 'Name'},
-      {property: 'type', header: 'Type'},
-      {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , ')},
+    this.tableColumns = [{property: 'name', header: 'Name', sort: STRING_SORT_FUNCTION},
+      {property: 'type', header: 'Type', sort: STRING_SORT_FUNCTION},
+      {property: 'allowedMeals', header: 'Allowed meals', value: (row: Ingredient) => row.allowedMeals.join(' , '), sort: STRING_SORT_FUNCTION},
       {property: '', header: 'Actions'}
     ];
     if (!this.loggedIn) {

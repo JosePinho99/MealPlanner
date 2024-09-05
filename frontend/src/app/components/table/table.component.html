@@ -1,5 +1,8 @@
 <div class="table-header" [ngStyle]="{'grid-template-columns': gridTemplateColumns}">
   <div *ngFor="let column of tableColumns; let j = index" class="table-th" [ngClass]="{'first-cell-th': j === 0}">
+    <i *ngIf="column?.sort && sortAttr !== column.property" (click)="sort(column, true)"  class="fa-solid fa-sort"></i>
+    <i *ngIf="column?.sort && sortAttr === column.property && sortAscending" (click)="sort(column, false)"  class="fa-solid fa-sort-up"></i>
+    <i *ngIf="column?.sort && sortAttr === column.property && !sortAscending" (click)="sort(column, true)" class="fa-solid fa-sort-down"></i>
     {{column.header}}
   </div>
 </div>

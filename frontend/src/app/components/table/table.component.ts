@@ -4,7 +4,10 @@ export interface TableColumn {
   property: string,
   header: string,
   value?: (row: any) => string,
+  sort?: (a, b) => any
 }
+
+export const STRING_SORT_FUNCTION = (a, b) => a.localeCompare(b)
 
 @Component({
   selector: 'table-component',
@@ -19,6 +22,9 @@ export class TableComponent implements OnInit {
   @Output() edit = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
 
+  sortAttr: string = null;
+  sortAscending = false;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -30,5 +36,19 @@ export class TableComponent implements OnInit {
 
   deleteClicked(data: any) {
     this.delete.emit(data);
+  }
+
+  sort(column: TableColumn, ascending: boolean) {
+    this.sortAttr = column.property;
+    this.sortAscending = ascending;
+    this.data = this.data.sort((a, b) => {
+      const aValue = column?.value ? column.value(a) : a[column.property];
+      const bValue = column?.value ? column.value(b) : b[column.property];
+      if (ascending) {
+        return column.sort(aValue, bValue);
+      }  else {
+        return column.sort(bValue, aValue);
+      }
+    });
   }
 }
