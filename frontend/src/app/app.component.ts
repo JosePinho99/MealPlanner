@@ -59,4 +59,10 @@ export class AppComponent implements OnInit {
       //TODO deal with error other than infinite loading (toastr?)
     });
   }
+
+  //TODO - Fix dont repeat bug
+  //TODO - Work on restriction form
+  //TODO - work on meals form
+  //TODO - Build plan api
+  //TODO - Modal with plan errors
 }

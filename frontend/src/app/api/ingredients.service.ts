@@ -11,10 +11,9 @@ export class IngredientsService {
   constructor(private http: HttpClient) {
   }
 
-  //TODO -
-  //       develop toastr for errors
-  //       sort
-  //       search
+  //TODO - develop toastr for errors
+
+
 
 
   getIngredients() {
