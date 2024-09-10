@@ -60,7 +60,6 @@ export class AppComponent implements OnInit {
     });
   }
 
-  //TODO - Fix dont repeat bug
   //TODO - Work on restriction form
   //TODO - work on meals form
   //TODO - Build plan api

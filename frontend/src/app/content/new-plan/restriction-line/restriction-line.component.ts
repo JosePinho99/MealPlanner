@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NewPlan, Operator, Restriction } from '../../../../../../commons/interfaces';
 import { StateService } from 'src/app/state.service';
+import {validatorRequired} from "../../../components/input/input.types";
 
 
 
@@ -13,6 +14,7 @@ export class RestrictionLineComponent implements OnInit {
   @Input() isIngredient: boolean = false;
   @Input() restriction: Restriction = {element: 'none', operator: Operator.Avoid, value: ['none']};
   @Input() newPlan = {} as NewPlan;
+  vRequired = validatorRequired;
 
   operators = [];
   values = [];
@@ -64,4 +66,6 @@ export class RestrictionLineComponent implements OnInit {
       this.operators = [Operator.MoreThan, Operator.LessThan, Operator.Between, Operator.Prioritize, Operator.Avoid, Operator.Combine, Operator.DontCombine, Operator.DontRepeatInARow];
     }
   }
+
+  protected readonly validatorRequired = validatorRequired;
 }

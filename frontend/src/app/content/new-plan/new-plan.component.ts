@@ -3,6 +3,8 @@ import {GeneratedPlan, Ingredient, Meal, NewPlan, Operator, Restriction} from '.
 import { defaultNewPlan } from '../utils';
 import { StateService } from 'src/app/state.service';
 import { HttpClient } from '@angular/common/http';
+import {validatorRequired} from "../../components/input/input.types";
+import {PlanService} from "../../api/plan.service";
 
 enum SubTab {
   GENERAL,
@@ -23,12 +25,17 @@ export class NewPlanComponent implements OnInit {
   dailyRestrictions: Restriction[] = [];
   dailyMeals: Meal[] = [];
   ingredients: Ingredient[] = [];
+
   planName: string = 'New plan';
+  loading: boolean = false;
+  errorMessage: string;
+
 
   @Output() generatedPlan = new EventEmitter<GeneratedPlan>();
 
   constructor(private state: StateService,
-    private http: HttpClient) { }
+    private planService: PlanService
+  ) { }
 
   ngOnInit(): void {
     this.state.ingredients.subscribe(ingredients => {
@@ -48,7 +55,7 @@ export class NewPlanComponent implements OnInit {
 
   addIngredientRestriction() {
     this.newPlan.ingredientRestrictions.push(
-      {element: 'rice', operator: Operator.MoreThan, value: ['2']}
+      {element: 'All', operator: Operator.MoreThanWeekly, value: ['2']}
     );
   }
 
@@ -100,9 +107,15 @@ export class NewPlanComponent implements OnInit {
 
 
   save() {
-    this.http.post('http://localhost:3000/createPlan', [this.newPlan, this.ingredients], {headers: {authorization: localStorage.getItem("token") ?? "unsigned"}}).subscribe((plan: GeneratedPlan) => {
-      console.log(plan);
-      this.generatedPlan.emit(plan);
-    });
+    this.loading = true;
+    this.planService.generatePlan(this.newPlan, this.ingredients).subscribe(response  => {
+      if (response.success) {
+        this.errorMessage = null;
+        this.generatedPlan.emit(response['plan']);
+      } else {
+        this.errorMessage = response['error'];
+      }
+      this.loading = false;
+    })
   }
 }

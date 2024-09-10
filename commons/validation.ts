@@ -146,7 +146,7 @@ function validateDontRepeats(validator: Validator, plannedDay: PlannedDay, plann
     //We need to have this type of logic to deal with ingredients that can only be used for lunch and dinner for example
     //Without it, if they were not in the afternoon snack they wouldn't count as repeating even though they would be in both lunch and dinner
     if (ing.allowedMeals.includes(mealType) && !currentMealIngredients.includes(ingName) && lastMealIngredients.includes(ingName)) {
-      lastMealIngredients = lastMealIngredients.slice(lastMealIngredients.indexOf(ingName), 1);
+      lastMealIngredients.splice(lastMealIngredients.indexOf(ingName), 1);
     }
   }
   for (let ing of currentMealIngredients) {
