@@ -17,6 +17,7 @@ export const createPlan = async (req: Request, res: Response) => {
             if (restriction.operator !== Operator.Between && (!restriction.value[0])) {
                 return res.status(400).json("Invalid values for " + restriction.element);
             }
+            //complete validations
         }
         const plan: GeneratedPlan = generatePlan(planConfig, req.body[1]);
         return res.status(200).json(plan);
