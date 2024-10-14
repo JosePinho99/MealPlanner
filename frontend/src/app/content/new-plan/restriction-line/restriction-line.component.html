@@ -32,12 +32,12 @@
 <!--  Value boxes -->
 <ng-container>
   <ng-container *ngIf="restriction.operator === 'more than (weekly)' || restriction.operator === 'less than (weekly)' || restriction.operator === 'more than'|| restriction.operator === 'less than'">
-    <input-component [validators]="[validatorRequired]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <input-component [validators]="[vRequired, vPositive]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
     <span *ngIf="isIngredient" [ngStyle]="{'margin-left': '5px'}">times a week</span>
   </ng-container>
 
   <ng-container *ngIf="restriction.operator === 'more than (daily)' || restriction.operator === 'less than (daily)'">
-    <input-component [validators]="[validatorRequired]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <input-component [validators]="[vRequired, vPositive]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
     <span *ngIf="isIngredient" [ngStyle]="{'margin-left': '5px'}">times a day</span>
   </ng-container>
 
@@ -67,11 +67,13 @@
   </ng-container>
 
   <ng-container *ngIf="restriction.operator === 'between (weekly)' || restriction.operator === 'between (daily)' || restriction.operator === 'between'">
-    <input-component [validators]="[validatorRequired]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
+    <input-component [validators]="[vRequired, vPositive]" [width]="60" [model]="restriction.value[0]" (changes)="updateNumericInput($event, 0)"></input-component>
     <span [ngStyle]="{'margin': '0px 5px'}">and</span>
-    <input-component [validators]="[validatorRequired]" [width]="60" [model]="restriction.value[1]" (changes)="updateNumericInput($event, 1)"></input-component>
+    <input-component [validators]="[vRequired, vPositive]" [width]="60" [model]="restriction.value[1]" (changes)="updateNumericInput($event, 1)"></input-component>
     <span *ngIf="isIngredient && restriction.operator === 'between (weekly)'" [ngStyle]="{'margin-left': '5px'}">times a week</span>
     <span *ngIf="isIngredient && restriction.operator === 'between (daily)'" [ngStyle]="{'margin-left': '5px'}">times a day</span>
+
+    <span *ngIf="validateQuantities()" class="error-message">Maximum value needs to be higher than minimum value</span>
   </ng-container>
 </ng-container>
 

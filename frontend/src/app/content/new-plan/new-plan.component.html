@@ -13,7 +13,7 @@
 
   <div class="restriction-block" style="margin-top: 10px; margin-bottom: 20px;">
     <p class="restriction-block-header">Daily restrictions <i class="fa-solid fa-plus pointer" (click)="addDailyRestriction()"></i></p>
-    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline'}" *ngFor="let restriction of dailyRestrictions; let i = index">
+    <div [ngStyle]="{'display': 'flex', 'align-items': 'baseline', 'margin': '2px 0'}" *ngFor="let restriction of dailyRestrictions; let i = index">
       <i class="fa-solid fa-eraser delete-icon" (click)="deleteDailyRestriction(i)"></i>
       <app-restriction-line
         [newPlan]="newPlan"

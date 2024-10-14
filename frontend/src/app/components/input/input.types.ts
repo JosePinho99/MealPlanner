@@ -11,6 +11,13 @@ export const validatorRequired = {
   errorMessage: 'Field is required'
 }
 
+export const validatorPositive = {
+  validationFunction: (value: any) => {
+    return value > 0;
+  },
+  errorMessage: 'Number must be positive'
+}
+
 export const validatorEmail = {
   validationFunction: (email: string) => {
     // Regular expression for validating an email address

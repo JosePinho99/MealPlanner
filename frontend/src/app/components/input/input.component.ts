@@ -19,6 +19,7 @@ export class InputComponent implements AfterViewInit {
   @Input() focus: boolean = false;
   @Input() onlyInt: boolean = false;
   @Input() validators: Validator[];
+  @Input() errorPosition: string = 'bottom';
   @Input() set forceValidate(activated: boolean) {
     if (activated) {
       this.validate();

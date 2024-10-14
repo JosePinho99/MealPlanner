@@ -2,9 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { Ingredient} from '../../../../../commons/interfaces';
 import {STRING_SORT_FUNCTION, TableColumn} from 'src/app/components/table/table.component';
 import { StateService } from 'src/app/state.service';
-import { HttpClient } from '@angular/common/http';
 import {IngredientsService} from "../../api/ingredients.service";
-import {filter} from "rxjs";
 
 @Component({
   selector: 'app-ingredients',

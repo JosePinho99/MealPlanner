@@ -1,20 +1,20 @@
 <input
-      *ngIf="!onlyInt"
-      #input
-      class="input-container"
-      [type]="type"
-      [maxlength]="32"
-      [(ngModel)]="model"
-      [placeholder]="placeholder ?? ''"
-      (input)="changeMade()"
-      [ngClass]="{'invalid': !valid}"
-      [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
+  *ngIf="!onlyInt"
+  #input
+  class="input-container"
+  [type]="type"
+  [maxlength]="32"
+  [(ngModel)]="model"
+  [placeholder]="placeholder ?? ''"
+  (input)="changeMade()"
+  [ngClass]="{'invalid': !valid}"
+  [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
 />
 
 <input
   *ngIf="onlyInt"
   #input
-  min="0" step="1"
+  step="1"
   class="input-container"
   [type]="type"
   [max]="5000"
@@ -25,4 +25,8 @@
   [ngStyle]="{'width': width + 'px', 'height': height + 'px', 'padding-left': paddingLeft + 'px', 'font-size': fontSize}"
 />
 
-<span *ngIf="!valid" class="error-message">{{errorMessage}}</span>
+<span *ngIf="!valid"
+      [ngClass]="{'error-message-bottom': errorPosition === 'bottom', 'error-message-top': errorPosition === 'top'}"
+>
+  {{errorMessage}}
+</span>

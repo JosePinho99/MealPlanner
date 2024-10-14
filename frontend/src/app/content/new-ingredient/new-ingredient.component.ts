@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import { Ingredient, IngredientType } from '../../../../../commons/interfaces';
 import { StateService } from 'src/app/state.service';
-import {Validator, validatorRequired} from "../../components/input/input.types";
+import {Validator, validatorPositive, validatorRequired} from "../../components/input/input.types";
 import {IngredientsService} from "../../api/ingredients.service";
 
 @Component({
@@ -17,6 +17,7 @@ export class NewIngredientComponent implements OnInit, OnChanges {
   @Output() processFinalized = new EventEmitter();
 
   vRequired = validatorRequired;
+  vPositive = validatorPositive;
   vNameExists: Validator = {errorMessage: 'Name already exists', validationFunction: (value) => !this.currentIngredients.find(i => i.name === value)};
   loading: boolean = false;
   formError: string;
@@ -91,5 +92,9 @@ export class NewIngredientComponent implements OnInit, OnChanges {
 
   cancel() {
     this.processFinalized.emit('cancel');
+  }
+
+  validateQuantities() {
+    return Number(this.ingredient.quantityMinimum) > Number(this.ingredient.quantityMaximum);
   }
 }

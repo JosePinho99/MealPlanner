@@ -24,17 +24,17 @@
         <div>
           <div style="display: flex">
             <span class="span-helper" [ngStyle]="{'margin-left': '0px', 'margin-right': '7px'}">Minimum</span>
-            <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [onlyInt]="true" [model]="ingredient.quantityMinimum" (changes)="ingredient.quantityMinimum = $event"></input-component>
+            <input-component [forceValidate]="formActivated" [validators]="[vRequired, vPositive]" [errorPosition]="'top'" [onlyInt]="true" [model]="ingredient.quantityMinimum" (changes)="ingredient.quantityMinimum = $event"></input-component>
             <span [ngStyle]="{'margin-left': '5px', 'margin-right': '50px'}" class="span-helper">{{'units'}}</span>
           </div>
           <div [ngStyle]="{'margin-top': '5px', 'display': 'flex'}">
             <span class="span-helper" [ngStyle]="{'margin-left': '0px'}">Maximum</span>
-            <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [onlyInt]="true" [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
+            <input-component [forceValidate]="formActivated" [validators]="[vRequired, vPositive]" [onlyInt]="true" [model]="ingredient.quantityMaximum" (changes)="ingredient.quantityMaximum = $event"></input-component>
             <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'units'}}</span>
           </div>
         </div>
       </div>
-      <span *ngIf="ingredient.quantityMinimum > ingredient.quantityMaximum" class="error-message">Maximum value needs to be higher than minimum value</span>
+      <span *ngIf="validateQuantities()" class="error-message">Maximum value needs to be higher than minimum value</span>
 
 
       <div class="block">
@@ -61,19 +61,19 @@
 
       <div class="block">
         <p class="block-label">Price</p>
-        <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [model]="ingredient.price" (changes)="ingredient.price = $event"></input-component>
+        <input-component [forceValidate]="formActivated" [validators]="[vRequired, vPositive]" [model]="ingredient.price" (changes)="ingredient.price = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
 
       <div class="block">
         <p class="block-label">Calories</p>
-        <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [model]="ingredient.calories" (changes)="ingredient.calories = $event"></input-component>
+        <input-component [forceValidate]="formActivated" [validators]="[vRequired, vPositive]" [model]="ingredient.calories" (changes)="ingredient.calories = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
 
       <div class="block">
         <p class="block-label">Proteins</p>
-        <input-component [forceValidate]="formActivated" [validators]="[vRequired]" [model]="ingredient.proteins" (changes)="ingredient.proteins = $event"></input-component>
+        <input-component [forceValidate]="formActivated" [validators]="[vRequired, vPositive]" [model]="ingredient.proteins" (changes)="ingredient.proteins = $event"></input-component>
         <span [ngStyle]="{'margin-left': '5px'}" class="span-helper">{{'/' + ingredient.referenceValue + ' units'}}</span>
       </div>
     </div>
