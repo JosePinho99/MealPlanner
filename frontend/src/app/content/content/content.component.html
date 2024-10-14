@@ -4,7 +4,16 @@
       <p class="current-plans-title">Current plans</p>
       <button-component class="current-plans-button" [title]="'Add plan'" (click)="newPlan()"></button-component>
     </div>
-    <p class="no-plans">{{loggedIn ? 'No plans created yet' : 'Sign in so you can save new plans and edit the ingredient list'}}</p>
+    <p class="no-plans" *ngIf="!loggedIn">No plans created yet</p>
+    <p class="no-plans" *ngIf="loggedIn && plans.length === 0">Sign in so you can save new plans and edit the ingredient list</p>
+    <div class="plan-container" *ngIf="loggedIn && plans.length > 0">
+      <div *ngFor="let plan of plans" class="plan-entry"
+           [ngStyle]="{'background': selectedTab?.name === plan?.name ? '#98aeeb' : 'unset'}"
+           (click)="generatedPlan({name: plan?.name, plan})"
+      >
+        {{plan?.name}}
+      </div>
+    </div>
   </div>
 </app-panel>
 
@@ -50,12 +59,15 @@
     *ngIf="selectedTab.type === TabType.NEW_PLAN"
     class="main-content"
     (generatedPlan)="generatedPlan($event)"
+    (closeNewPlanTab)="removeCurrentTab()"
   >
   </app-new-plan>
 
   <app-generated-plan
     *ngIf="selectedTab.type === TabType.GENERATED_PLAN"
     class="main-content"
+    [planName]="selectedTab.name"
     [plan]="selectedTab.data"
+    (closeTab)="removeCurrentTab()"
   ></app-generated-plan>
 </div>

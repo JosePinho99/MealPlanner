@@ -1,5 +1,6 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {GeneratedPlan, PlannedMeal} from "../../../../../commons/interfaces";
+import {PlanService} from "../../api/plan.service";
 
 @Component({
   selector: 'app-generated-plan',
@@ -9,12 +10,16 @@ import {GeneratedPlan, PlannedMeal} from "../../../../../commons/interfaces";
 export class GeneratedPlanComponent implements OnInit {
 
   @Input() plan: GeneratedPlan;
+  @Input() planName: string;
   searchValue: string = "";
   weekCost: number;
 
   mealList: string[];
   loading: boolean = false;
-  constructor() { }
+
+  @Output() closeTab = new EventEmitter();
+
+  constructor(private planService: PlanService) { }
 
   ngOnInit(): void {
     this.mealList = this.plan.plannedDays[0].meals.map(m => m.name);
@@ -52,10 +57,12 @@ export class GeneratedPlanComponent implements OnInit {
   }
 
   save() {
-
+    this.planService.savePlan(this.plan, this.planName).subscribe(_ => {
+      console.log('yahoo');
+    })
   }
 
   discard() {
-
+    this.closeTab.emit();
   }
 }

@@ -3,6 +3,9 @@ import { StateService } from './state.service';
 import {LogCredentials} from "./types/user";
 import {LogInService} from "./api/log-in.service";
 import {IngredientsService} from "./api/ingredients.service";
+import {combineLatest} from "rxjs";
+import {PlanService} from "./api/plan.service";
+import {GeneratedPlan} from "../../../commons/interfaces";
 
 @Component({
   selector: 'app-root',
@@ -13,12 +16,14 @@ export class AppComponent implements OnInit {
   constructor(
     private state: StateService,
     private logInService: LogInService,
+    private planService: PlanService,
     private ingredientsService: IngredientsService
   ) { }
 
   loadingPage: boolean = false;
   displayLoginModal: boolean = false;
   loggedUser: string = null;
+  plans: GeneratedPlan[];
 
   ngOnInit() {
     if (localStorage.getItem('token')) {
@@ -51,13 +56,16 @@ export class AppComponent implements OnInit {
 
   getUserData() {
     this.loadingPage = true;
-    this.ingredientsService.getIngredients().subscribe(ingredients => {
+    combineLatest([this.ingredientsService.getIngredients(), this.planService.getPlans()]).subscribe(([ingredients, plans]) => {
       if (ingredients) {
         this.state.setIngredients(ingredients);
         this.loadingPage = false;
       }
+      if (plans) {
+        this.plans = plans;
+      }
       //TODO deal with error other than infinite loading (toastr?)
-    });
+    })
   }
 
   //TODO - Work on restriction form

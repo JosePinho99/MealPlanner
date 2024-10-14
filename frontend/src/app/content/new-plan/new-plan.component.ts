@@ -32,6 +32,7 @@ export class NewPlanComponent implements OnInit {
 
 
   @Output() generatedPlan = new EventEmitter<{name: string, plan: GeneratedPlan}>();
+  @Output() closeNewPlanTab = new EventEmitter();
 
   constructor(private state: StateService,
     private planService: PlanService
@@ -117,5 +118,9 @@ export class NewPlanComponent implements OnInit {
       }
       this.loading = false;
     })
+  }
+
+  cancel() {
+    this.closeNewPlanTab.emit();
   }
 }

@@ -12,7 +12,7 @@
 
 
 <loading-component *ngIf="loadingPage" [top]="'calc(50% - 60px)'"></loading-component>
-<app-content *ngIf="!loadingPage" [loggedIn]="loggedUser !== null"></app-content>
+<app-content *ngIf="!loadingPage" [loggedIn]="loggedUser !== null" [plans]="plans"></app-content>
 
 
 

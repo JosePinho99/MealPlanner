@@ -24,6 +24,7 @@ enum TabType {
 })
 export class ContentComponent implements OnInit {
   @Input() loggedIn: boolean = false;
+  @Input() plans: GeneratedPlan[] = [];
 
   loadingIngredients: boolean = false;
   TabType = TabType;
@@ -40,6 +41,7 @@ export class ContentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.plans)
     this.state.ingredients.subscribe(ingredients => {
       this.currentIngredients = ingredients;
     });
@@ -77,9 +79,7 @@ export class ContentComponent implements OnInit {
   }
 
   endedAddingEditingIngredient(action: string) {
-    const index = this.tabs.indexOf(this.selectedTab);
-    this.tabs.splice(index, 1);
-    this.selectedTab = this.tabs[0];
+    this.removeCurrentTab();
     if (action !== "cancel") {
       this.updateIngredients();
     }
@@ -100,5 +100,11 @@ export class ContentComponent implements OnInit {
     const planTab = {name: generatedPlan.name, type: TabType.GENERATED_PLAN, data: generatedPlan.plan};
     this.tabs.push(planTab);
     this.selectedTab = planTab;
+  }
+
+  removeCurrentTab() {
+    const index = this.tabs.indexOf(this.selectedTab);
+    this.tabs.splice(index, 1);
+    this.selectedTab = this.tabs[0];
   }
 }

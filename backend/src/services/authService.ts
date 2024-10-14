@@ -12,3 +12,12 @@ export const registerUser = async (email: string, username: string, password: st
     const result = await pool.query(queryText, [email, username, password]);
     return result.rowCount !== 0;
 };
+
+export const getUserIdByEmail = async (email: string) => {
+    let userQuery = 'SELECT id FROM public."Users" WHERE "email" =  $1';
+    const userResult = await pool.query(userQuery, [email]);
+    if (userResult?.rows?.length !== 1) {
+        return null;
+    }
+    return userResult.rows[0]['id'];
+}

@@ -1,6 +1,25 @@
 import {Request, Response} from 'express';
 import {GeneratedPlan, NewPlan, Operator} from "../../../../commons/interfaces";
 import {generatePlan} from "../../../core/planner";
+import {verifyToken} from "../../utils/authenticationUtils";
+import * as PlansService from '../../services/plansService';
+import {getUserIdByEmail} from "../../services/authService";
+
+export const getPlans = async (req: Request, res: Response) => {
+    try {
+        const token = req.headers['token'];
+        const user = verifyToken(token);
+        if (!user) { return res.status(402).json("Can't execute this action without being logged in"); }
+        const userId = await getUserIdByEmail(user['email']);
+        if (!userId) { return res.status(402).json("Can't execute this action without being logged in") }
+
+        const result = await PlansService.getPlansForUser(userId);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json("Unknown error");
+    }
+};
 
 
 export const createPlan = async (req: Request, res: Response) => {
@@ -23,6 +42,27 @@ export const createPlan = async (req: Request, res: Response) => {
         return res.status(500).json("Unknown error");
     }
 };
+
+
+export const savePlan = async (req: Request, res: Response) => {
+    try {
+        const plan = req.body;
+        const token = req.headers['token'];
+        const user = verifyToken(token);
+        if (!user) { return res.status(402).json("Can't execute this action without being logged in"); }
+        const userId = await getUserIdByEmail(user['email']);
+        if (!userId) { return res.status(402).json("Can't execute this action without being logged in"); }
+
+        if (!await PlansService.addPlanToUser(plan, userId)) {
+            return res.status(500).json("Error when trying to save the plan");
+        }
+        return res.status(204).json(plan);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json("Unknown error");
+    }
+};
+
 
 
 

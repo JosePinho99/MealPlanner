@@ -66,6 +66,7 @@ export enum MealType {
 export interface GeneratedPlan {
   plannedDays: PlannedDay[],
   errors: Error[],
+  name?: string,
 }
 
 //For the backend generated plan
