@@ -96,8 +96,8 @@ export class ContentComponent implements OnInit {
     });
   }
 
-  generatedPlan(plan: GeneratedPlan) {
-    const planTab = {name: "hello", type: TabType.GENERATED_PLAN, data: plan};
+  generatedPlan(generatedPlan: {name: string, plan: GeneratedPlan}) {
+    const planTab = {name: generatedPlan.name, type: TabType.GENERATED_PLAN, data: generatedPlan.plan};
     this.tabs.push(planTab);
     this.selectedTab = planTab;
   }

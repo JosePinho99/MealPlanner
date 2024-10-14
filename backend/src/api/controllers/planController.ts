@@ -8,16 +8,14 @@ export const createPlan = async (req: Request, res: Response) => {
         const planConfig: NewPlan = req.body[0];
         //Validate restrictions
         for (let restriction of planConfig.dailyRestrictions) {
-            if (restriction.operator === Operator.Between && restriction.value[0] >= restriction.value[1]) {
-                return res.status(400).json("Between must have a maximum value bigger than the minimum value for " + restriction.element);
-            }
-            if (restriction.operator === Operator.Between && (!restriction.value[0] || !restriction.value[1])) {
-                return res.status(400).json("Between must have valid values for " + restriction.element);
-            }
-            if (restriction.operator !== Operator.Between && (!restriction.value[0])) {
+            if (!validateInputs(restriction)) {
                 return res.status(400).json("Invalid values for " + restriction.element);
             }
-            //complete validationsttff
+        }
+        for (let restriction of planConfig.ingredientRestrictions) {
+            if (!validateInputs(restriction)) {
+                return res.status(400).json("Invalid values for " + restriction.element);
+            }
         }
         const plan: GeneratedPlan = generatePlan(planConfig, req.body[1]);
         return res.status(200).json(plan);
@@ -25,3 +23,38 @@ export const createPlan = async (req: Request, res: Response) => {
         return res.status(500).json("Unknown error");
     }
 };
+
+
+
+function validateInputs(restriction) {
+    if (restriction.operator === Operator.Between && restriction.value[0] >= restriction.value[1]) {
+        return false;
+    }
+    if (restriction.operator === Operator.Between && (!restriction.value[0] || !restriction.value[1])) {
+        return false;
+    }
+    if (restriction.operator === Operator.Between && (Number(restriction.value[0]) < 1 || Number(restriction.value[1]) < 1)) {
+        return false;
+    }
+    if (
+        restriction.operator === Operator.LessThan ||
+        restriction.operator === Operator.LessThanWeekly ||
+        restriction.operator === Operator.MoreThan ||
+        restriction.operator === Operator.MoreThanWeekly
+    ) {
+        if (!restriction.value[0] || Number(restriction.value[0]) < 1) {
+            return false;
+        }
+    }
+    if (
+        restriction.operator === Operator.Avoid ||
+        restriction.operator === Operator.Prioritize ||
+        restriction.operator === Operator.Combine ||
+        restriction.operator === Operator.DontCombine
+    ) {
+        if (!restriction.value[0]) {
+            return false;
+        }
+    }
+    return true;
+}

@@ -9,7 +9,7 @@ import {Validator} from "./input.types";
 })
 export class InputComponent implements AfterViewInit {
   @ViewChild('input') inputElement: ElementRef;
-  @Input() width: number = 150;1
+  @Input() width: number = 150;
   @Input() height: number = 23;
   @Input() paddingLeft: number = 5;
   @Input() fontSize: string = '1rem';
@@ -46,11 +46,13 @@ export class InputComponent implements AfterViewInit {
 
   validate() {
     this.valid = true;
-    for (let validator of this.validators) {
-      if (!validator.validationFunction(this.model)) {
-        this.valid = false;
-        this.errorMessage = validator.errorMessage;
-        break;
+    if (this.validators) {
+      for (let validator of this.validators) {
+        if (!validator.validationFunction(this.model)) {
+          this.valid = false;
+          this.errorMessage = validator.errorMessage;
+          break;
+        }
       }
     }
   }

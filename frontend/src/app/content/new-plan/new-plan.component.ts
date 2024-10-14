@@ -31,7 +31,7 @@ export class NewPlanComponent implements OnInit {
   errorMessage: string;
 
 
-  @Output() generatedPlan = new EventEmitter<GeneratedPlan>();
+  @Output() generatedPlan = new EventEmitter<{name: string, plan: GeneratedPlan}>();
 
   constructor(private state: StateService,
     private planService: PlanService
@@ -111,7 +111,7 @@ export class NewPlanComponent implements OnInit {
     this.planService.generatePlan(this.newPlan, this.ingredients).subscribe(response  => {
       if (response.success) {
         this.errorMessage = null;
-        this.generatedPlan.emit(response['plan']);
+        this.generatedPlan.emit({plan: response['plan'], name: this.planName});
       } else {
         this.errorMessage = response['error'];
       }
